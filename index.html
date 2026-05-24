@@ -162,17 +162,6 @@ footer{background:var(--night);position:relative;z-index:1;padding:64px 0 40px;b
 .foot-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:28px;border-top:1px solid var(--border-2);flex-wrap:wrap;gap:12px}
 .foot-bottom span{font-family:var(--mono);font-size:11px;color:var(--txt-faint);letter-spacing:.04em}
 
-/* how it works steps */
-.steps{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-@media(max-width:820px){.steps{grid-template-columns:1fr}}
-.step{background:var(--card);border:1px solid var(--border-2);border-radius:20px;padding:34px;transition:border-color .2s,transform .2s}
-.step:hover{border-color:rgba(110,35,215,.35);transform:translateY(-2px)}
-.step-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;gap:14px}
-.step-num{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--purple-light)}
-.step-badge{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--txt-faint);border:1px solid var(--border);padding:6px 11px;border-radius:20px;text-align:right}
-.step h3{font-family:var(--serif);font-weight:500;font-size:23px;color:var(--cream);margin-bottom:12px}
-.step p{font-size:14.5px;color:var(--txt-dim);line-height:1.7}
-
 /* faq */
 .faq-list{display:flex;flex-direction:column;gap:12px}
 .faq-item{background:var(--card);border:1px solid var(--border-2);border-radius:18px;padding:32px 34px;transition:border-color .2s}
@@ -340,39 +329,6 @@ footer{background:var(--night);position:relative;z-index:1;padding:64px 0 40px;b
   </div>
 </section>
 
-<!-- COMO FUNCIONA NA PRÁTICA -->
-<section class="section" id="como-funciona">
-  <div class="wrap">
-    <div class="section-head">
-      <span class="eyebrow">Como funciona na prática</span>
-      <h2>Do diagnóstico à operação: quatro etapas, sem mistério.</h2>
-      <p>Antes de qualquer proposta, entendemos onde o Coeficiente de Alavanca aponta. Depois, construímos os blocos certos e colocamos pra funcionar dentro da sua operação.</p>
-    </div>
-    <div class="steps">
-      <div class="step">
-        <div class="step-top"><div class="step-num">01</div><div class="step-badge">Gratuito · Sem compromisso</div></div>
-        <h3>Diagnóstico</h3>
-        <p>60 minutos de conversa estruturada. Mapeamos os 7 estágios da sua jornada, rodamos o Coeficiente de Alavanca e identificamos qual gargalo está travando mais receita agora. Você sai da conversa com clareza, independente de fechar ou não.</p>
-      </div>
-      <div class="step">
-        <div class="step-top"><div class="step-num">02</div><div class="step-badge">Escopo claro · Sem surpresa</div></div>
-        <h3>Proposta modular</h3>
-        <p>Com o diagnóstico em mãos, montamos a arquitetura com os blocos que resolvem as suas dores específicas. Você vê exatamente o que será construído, por quê, e qual métrica cada bloco vai mover. Nenhum pacote fechado.</p>
-      </div>
-      <div class="step">
-        <div class="step-top"><div class="step-num">03</div><div class="step-badge">Ativos reais · Não orientação</div></div>
-        <h3>Construção</h3>
-        <p>Entregamos os ativos funcionando: criativos e vídeos para tráfego pago, LPs de conversão, roteiros de qualificação e vendas, processos de extração de receita da base atual, treinamento do time comercial e dashboards operacionais. Tudo dentro da sua stack, sem migração forçada.</p>
-      </div>
-      <div class="step">
-        <div class="step-top"><div class="step-num">04</div><div class="step-badge">Dado como bússola · Sem voo cego</div></div>
-        <h3>Operação e ajuste</h3>
-        <p>Acompanhamos a performance semana a semana. Feedback loop mídia × comercial, métrica por estágio e ajuste contínuo em cima do dado. Você opera o que está pronto, nós garantimos que cada peça funcione integrada.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- FAQ -->
 <section class="section" id="faq">
   <div class="wrap">
@@ -395,14 +351,6 @@ footer{background:var(--night);position:relative;z-index:1;padding:64px 0 40px;b
         <div class="faq-a">A estrutura completa fica de pé em até 12 semanas. Dependendo do gargalo identificado no diagnóstico, alguns blocos geram sinal antes disso. O que nunca fazemos é prometer resultado sem saber qual estágio está travado: por isso começamos com o diagnóstico, não com uma promessa genérica.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-q">Preciso contratar novas ferramentas ou plataformas?</div>
-        <div class="faq-a">Não. Operamos na stack que você já tem: seu CRM, suas plataformas de mídia, seu WhatsApp. <strong>Zero migração forçada, zero fornecedor paralelo, zero dependência da nossa infraestrutura.</strong></div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q">Para que tipo de empresa a Nettu's faz sentido?</div>
-        <div class="faq-a">Para empresas B2B (e negócios com operação comercial estruturável) que já têm produto e alguma receita, mas cuja máquina comercial é desorganizada, dependente de esforço manual ou travada em algum estágio específico. Se você busca resultado em 7 dias ou quer só "aparecer nas redes", a Nettu's não é pra você.</div>
-      </div>
-      <div class="faq-item">
         <div class="faq-q">Como é diferente de contratar uma consultoria?</div>
         <div class="faq-a">Consultoria entrega orientação: você executa. A Nettu's entrega ativos funcionando: criativos prontos, roteiros escritos, processos configurados, dashboards operando. Você sai da reunião com a máquina rodando, não com um relatório na mão.</div>
       </div>
@@ -412,7 +360,7 @@ footer{background:var(--night);position:relative;z-index:1;padding:64px 0 40px;b
       </div>
       <div class="faq-item">
         <div class="faq-q">Como funciona o investimento?</div>
-        <div class="faq-a">A arquitetura é modular: você paga pelos blocos que o diagnóstico apontar como necessários pro seu momento. Se o gargalo é retenção, não montamos aquisição do zero. O investimento é proporcional à necessidade real, não a um pacote fechado. O valor exato é definido após o diagnóstico.</div>
+        <div class="faq-a">O investimento é definido após o diagnóstico, de acordo com o que a operação precisa para gerar resultado. Não trabalhamos com menu de entregáveis nem pacote pré-formatado: o que define a proposta é o resultado que precisamos alcançar em conjunto. O modelo é de parceria contínua, não de projeto pontual.</div>
       </div>
     </div>
   </div>
