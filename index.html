@@ -162,6 +162,25 @@ footer{background:var(--night);position:relative;z-index:1;padding:64px 0 40px;b
 .foot-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:28px;border-top:1px solid var(--border-2);flex-wrap:wrap;gap:12px}
 .foot-bottom span{font-family:var(--mono);font-size:11px;color:var(--txt-faint);letter-spacing:.04em}
 
+/* how it works steps */
+.steps{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:820px){.steps{grid-template-columns:1fr}}
+.step{background:var(--card);border:1px solid var(--border-2);border-radius:20px;padding:34px;transition:border-color .2s,transform .2s}
+.step:hover{border-color:rgba(110,35,215,.35);transform:translateY(-2px)}
+.step-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;gap:14px}
+.step-num{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--purple-light)}
+.step-badge{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--txt-faint);border:1px solid var(--border);padding:6px 11px;border-radius:20px;text-align:right}
+.step h3{font-family:var(--serif);font-weight:500;font-size:23px;color:var(--cream);margin-bottom:12px}
+.step p{font-size:14.5px;color:var(--txt-dim);line-height:1.7}
+
+/* faq */
+.faq-list{display:flex;flex-direction:column;gap:12px}
+.faq-item{background:var(--card);border:1px solid var(--border-2);border-radius:18px;padding:32px 34px;transition:border-color .2s}
+.faq-item:hover{border-color:rgba(110,35,215,.3)}
+.faq-q{font-family:var(--serif);font-weight:500;font-size:21px;color:var(--cream);margin-bottom:14px;line-height:1.25}
+.faq-a{font-size:15px;color:var(--txt-dim);line-height:1.75;max-width:820px}
+.faq-a strong{color:var(--txt);font-weight:700}
+
 /* reveal animation */
 @keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 .reveal{animation:rise .7s cubic-bezier(.2,.7,.2,1) both}
@@ -317,6 +336,84 @@ footer{background:var(--night);position:relative;z-index:1;padding:64px 0 40px;b
 <div class="principle"><div class="pn">02</div><h3>Usamos a stack que você já tem.</h3><p>Nenhuma ferramenta nova precisa ser comprada. Se você já usa WhatsApp API, seu CRM e suas plataformas de mídia, a gente opera em cima disso. Zero fornecedor paralelo, zero migração forçada, zero dependência da nossa infra.</p></div>
 <div class="principle"><div class="pn">03</div><h3>Arquitetura modular · você paga pelo que precisa.</h3><p>O diagnóstico define quais blocos fazem sentido pro seu momento. Se a sua dor é retenção, não montamos aquisição do zero. Se a sua dor é topo de funil, não vamos vender LTV antes de resolver o básico. Custo proporcional à necessidade.</p></div>
 <div class="principle"><div class="pn">04</div><h3>Métrica clara por estágio · nunca voo cego.</h3><p>Cada bloco tem uma métrica operacional (a coisa que ele deveria mover) e uma métrica de impacto (o que muda no seu resultado final). Você enxerga semanalmente se o que construímos está funcionando, e se não está, ajustamos em cima do dado.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA NA PRÁTICA -->
+<section class="section" id="como-funciona">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Como funciona na prática</span>
+      <h2>Do diagnóstico à operação: quatro etapas, sem mistério.</h2>
+      <p>Antes de qualquer proposta, entendemos onde o Coeficiente de Alavanca aponta. Depois, construímos os blocos certos e colocamos pra funcionar dentro da sua operação.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-top"><div class="step-num">01</div><div class="step-badge">Gratuito · Sem compromisso</div></div>
+        <h3>Diagnóstico</h3>
+        <p>60 minutos de conversa estruturada. Mapeamos os 7 estágios da sua jornada, rodamos o Coeficiente de Alavanca e identificamos qual gargalo está travando mais receita agora. Você sai da conversa com clareza, independente de fechar ou não.</p>
+      </div>
+      <div class="step">
+        <div class="step-top"><div class="step-num">02</div><div class="step-badge">Escopo claro · Sem surpresa</div></div>
+        <h3>Proposta modular</h3>
+        <p>Com o diagnóstico em mãos, montamos a arquitetura com os blocos que resolvem as suas dores específicas. Você vê exatamente o que será construído, por quê, e qual métrica cada bloco vai mover. Nenhum pacote fechado.</p>
+      </div>
+      <div class="step">
+        <div class="step-top"><div class="step-num">03</div><div class="step-badge">Ativos reais · Não orientação</div></div>
+        <h3>Construção</h3>
+        <p>Entregamos os ativos funcionando: criativos e vídeos para tráfego pago, LPs de conversão, roteiros de qualificação e vendas, processos de extração de receita da base atual, treinamento do time comercial e dashboards operacionais. Tudo dentro da sua stack, sem migração forçada.</p>
+      </div>
+      <div class="step">
+        <div class="step-top"><div class="step-num">04</div><div class="step-badge">Dado como bússola · Sem voo cego</div></div>
+        <h3>Operação e ajuste</h3>
+        <p>Acompanhamos a performance semana a semana. Feedback loop mídia × comercial, métrica por estágio e ajuste contínuo em cima do dado. Você opera o que está pronto, nós garantimos que cada peça funcione integrada.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Perguntas frequentes</span>
+      <h2>As dúvidas que todo mundo tem antes de contratar.</h2>
+      <p>Respostas diretas, sem enrolação.</p>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q">Arquitetura de receita é só um nome diferente pra agência de tráfego?</div>
+        <div class="faq-a">Não. Uma agência de tráfego cuida de uma camada: a mídia. A Nettu's diagnostica os 7 estágios da jornada do cliente (da descoberta à indicação) e constrói os blocos que estão travando a receita, sejam eles de aquisição, qualificação, conversão, retenção ou inteligência operacional. A mídia pode fazer parte da solução, mas nunca é o projeto inteiro.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Vocês fazem tráfego pago?</div>
+        <div class="faq-a">Sim, quando o diagnóstico apontar que aquisição é o gargalo. Isso inclui gestão de anúncios, criação de criativos (imagens e vídeos) e páginas de conversão (LPs). Mas nunca entregamos só tráfego isolado: ele está sempre integrado ao processo de qualificação e conversão, para não encher o funil de lead que não fecha.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Em quanto tempo aparecem os primeiros resultados?</div>
+        <div class="faq-a">A estrutura completa fica de pé em até 12 semanas. Dependendo do gargalo identificado no diagnóstico, alguns blocos geram sinal antes disso. O que nunca fazemos é prometer resultado sem saber qual estágio está travado: por isso começamos com o diagnóstico, não com uma promessa genérica.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Preciso contratar novas ferramentas ou plataformas?</div>
+        <div class="faq-a">Não. Operamos na stack que você já tem: seu CRM, suas plataformas de mídia, seu WhatsApp. <strong>Zero migração forçada, zero fornecedor paralelo, zero dependência da nossa infraestrutura.</strong></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Para que tipo de empresa a Nettu's faz sentido?</div>
+        <div class="faq-a">Para empresas B2B (e negócios com operação comercial estruturável) que já têm produto e alguma receita, mas cuja máquina comercial é desorganizada, dependente de esforço manual ou travada em algum estágio específico. Se você busca resultado em 7 dias ou quer só "aparecer nas redes", a Nettu's não é pra você.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Como é diferente de contratar uma consultoria?</div>
+        <div class="faq-a">Consultoria entrega orientação: você executa. A Nettu's entrega ativos funcionando: criativos prontos, roteiros escritos, processos configurados, dashboards operando. Você sai da reunião com a máquina rodando, não com um relatório na mão.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">O que é o Coeficiente de Alavanca?</div>
+        <div class="faq-a">É a ferramenta proprietária da Nettu's que calcula qual dos 7 estágios da jornada, se destravado agora, gera o maior impacto em receita. Em vez de atacar todos os estágios ao mesmo tempo (e não mover nenhum), o Coeficiente define onde a Nettu's ataca primeiro, com base nos dados da sua operação.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Como funciona o investimento?</div>
+        <div class="faq-a">A arquitetura é modular: você paga pelos blocos que o diagnóstico apontar como necessários pro seu momento. Se o gargalo é retenção, não montamos aquisição do zero. O investimento é proporcional à necessidade real, não a um pacote fechado. O valor exato é definido após o diagnóstico.</div>
+      </div>
     </div>
   </div>
 </section>
