@@ -169,8 +169,6 @@ footer{background:var(--night);position:relative;z-index:1;padding:44px 0 28px;b
 .faq-item:hover{border-color:rgba(110,35,215,.3)}
 #faq{position:relative;overflow:hidden}
 .faq-bg{position:absolute;inset:0;pointer-events:none;z-index:0}
-.faq-bar{position:absolute;bottom:0;border-radius:2px 2px 0 0;background:linear-gradient(to top,rgba(110,35,215,.55),rgba(139,79,223,.18) 55%,transparent);filter:blur(1px);box-shadow:0 0 10px rgba(110,35,215,.4);animation:barRise linear infinite;transform-origin:bottom}
-@keyframes barRise{0%{transform:scaleY(0);opacity:0}12%{opacity:.9}72%{opacity:.55}100%{transform:scaleY(1);opacity:0}}
 .faq-q{font-family:var(--serif);font-weight:500;font-size:21px;color:var(--cream);margin-bottom:14px;line-height:1.25}
 .faq-a{font-size:15px;color:var(--txt-dim);line-height:1.75;max-width:820px}
 .faq-a strong{color:var(--txt);font-weight:700}
@@ -425,16 +423,62 @@ const faqObs = new IntersectionObserver(entries=>{
 },{threshold:.1});
 faqItems.forEach(el=>faqObs.observe(el));
 
-// FAQ animated bars background
+// FAQ financial chart background
 (function(){
   const bg=document.getElementById('faqBg');
   if(!bg)return;
-  for(let i=0;i<22;i++){
-    const b=document.createElement('div');
-    b.className='faq-bar';
-    b.style.cssText=`left:${(i/22*100)+(Math.random()*2-1)}%;width:${1+Math.random()*2.5}px;height:${15+Math.random()*58}%;animation-duration:${2.2+Math.random()*2.8}s;animation-delay:${-Math.random()*5}s;opacity:${.2+Math.random()*.3}`;
-    bg.appendChild(b);
+  const cv=document.createElement('canvas');
+  cv.style.cssText='position:absolute;inset:0;width:100%;height:100%';
+  bg.appendChild(cv);
+  const c=cv.getContext('2d');
+  let W,H,pts,prog=0,hold=0,a=1,ph='draw';
+  function rsz(){W=cv.width=cv.offsetWidth;H=cv.height=cv.offsetHeight;}
+  rsz();window.addEventListener('resize',rsz);
+  function gen(){
+    const n=9,px=W*.05,py=H*.1,ch=H*.72;
+    pts=Array.from({length:n},(_,i)=>{
+      const t=i/(n-1),base=py+ch*(.82-t*.54),j=(Math.random()-.5)*ch*.42;
+      return{x:px+t*(W-px*2),y:Math.max(py+8,Math.min(py+ch-8,base+j))};
+    });
+    prog=0;hold=0;a=1;ph='draw';
   }
+  gen();
+  function ptAt(f){
+    const n=pts.length-1,s=f*n,i=Math.min(Math.floor(s),n-1),t=s-i;
+    const p0=pts[i],p1=pts[i+1],cx=(p0.x+p1.x)/2;
+    return{x:(1-t)*(1-t)*p0.x+2*(1-t)*t*cx+t*t*p1.x,
+           y:(1-t)*(1-t)*p0.y+2*(1-t)*t*((p0.y+p1.y)/2)+t*t*p1.y};
+  }
+  function frame(){
+    c.clearRect(0,0,W,H);
+    c.globalAlpha=a*.36;
+    if(ph==='draw'){prog=Math.min(prog+.003,1);if(prog>=1)ph='hold';}
+    else if(ph==='hold'){if(++hold>110)ph='fade';}
+    else if(ph==='fade'){a=Math.max(a-.016,0);if(a<=0)gen();}
+    const vn=Math.floor(prog*(pts.length-1))+1;
+    const cur=prog<1?ptAt(prog):pts[pts.length-1];
+    const vp=[...pts.slice(0,vn)];
+    if(prog<1)vp[vp.length-1]=cur;
+    if(vp.length<2){requestAnimationFrame(frame);return;}
+    function cont(){for(let i=1;i<vp.length;i++){const cx=(vp[i-1].x+vp[i].x)/2;c.bezierCurveTo(cx,vp[i-1].y,cx,vp[i].y,vp[i].x,vp[i].y);}}
+    c.beginPath();c.moveTo(vp[0].x,H);c.lineTo(vp[0].x,vp[0].y);cont();c.lineTo(vp[vp.length-1].x,H);c.closePath();
+    const fg=c.createLinearGradient(0,0,0,H);fg.addColorStop(0,'rgba(110,35,215,.28)');fg.addColorStop(1,'rgba(110,35,215,.02)');
+    c.fillStyle=fg;c.fill();
+    c.beginPath();c.moveTo(vp[0].x,vp[0].y);cont();
+    c.strokeStyle='rgba(139,79,223,.85)';c.lineWidth=1.8;c.shadowBlur=16;c.shadowColor='#6E23D7';c.stroke();c.shadowBlur=0;
+    pts.slice(0,vn-1).forEach(p=>{
+      const rg=c.createRadialGradient(p.x,p.y,0,p.x,p.y,16);
+      rg.addColorStop(0,'rgba(139,79,223,.55)');rg.addColorStop(1,'rgba(139,79,223,0)');
+      c.beginPath();c.arc(p.x,p.y,16,0,6.28);c.fillStyle=rg;c.fill();
+      c.beginPath();c.arc(p.x,p.y,3,0,6.28);c.fillStyle='#C5A7EF';c.fill();
+    });
+    const rg=c.createRadialGradient(cur.x,cur.y,0,cur.x,cur.y,20);
+    rg.addColorStop(0,'rgba(110,35,215,.7)');rg.addColorStop(1,'rgba(110,35,215,0)');
+    c.beginPath();c.arc(cur.x,cur.y,20,0,6.28);c.fillStyle=rg;c.fill();
+    c.beginPath();c.arc(cur.x,cur.y,5,0,6.28);c.fillStyle='#8B4FDF';c.shadowBlur=22;c.shadowColor='#6E23D7';c.fill();c.shadowBlur=0;
+    requestAnimationFrame(frame);
+  }
+  frame();
 })();
 </script>
 </body>
