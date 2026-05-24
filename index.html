@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nettu's · Arquitetura de Receita</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Nunito:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#6E23D7;--purple-light:#8B4FDF;--purple-soft:#C5A7EF;--purple-deep:#37116B;
+  --ink:#0E0E0E;--cream:#F9F3E9;--night:#0C0913;--night-2:#15101F;--white:#FFFFFF;
+  --card:#161220;--card-2:#1B1626;--border:rgba(249,243,233,.10);--border-2:rgba(249,243,233,.06);
+  --txt:#EDE7DC;--txt-dim:rgba(237,231,220,.72);--txt-faint:rgba(237,231,220,.54);
+  --mono:'JetBrains Mono',monospace;--serif:'Fraunces',Georgia,serif;--sans:'Nunito',system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--night);color:var(--txt);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* grid background */
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(var(--border-2) 1px,transparent 1px),linear-gradient(90deg,var(--border-2) 1px,transparent 1px);
+  background-size:64px 64px;opacity:.6;mask-image:radial-gradient(ellipse 80% 60% at 50% 30%,#000 30%,transparent 80%)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 32px;position:relative;z-index:1}
+
+/* mono label */
+.eyebrow{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.28em;text-transform:uppercase;color:var(--purple-light)}
+
+/* nav */
+nav{position:sticky;top:0;z-index:100;background:rgba(12,9,19,.72);backdrop-filter:blur(16px);border-bottom:1px solid var(--border-2)}
+.nav-inner{max-width:1180px;margin:0 auto;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--cream)}
+.brand svg{height:30px;width:auto}
+.brand .bname{font-weight:900;font-size:18px;letter-spacing:-.02em}
+.nav-links{display:flex;gap:30px;align-items:center}
+.nav-links a{font-size:14px;color:var(--txt-dim);text-decoration:none;font-weight:600;transition:color .15s}
+.nav-links a:hover{color:var(--cream)}
+.nav-cta{background:var(--cream);color:var(--ink);font-weight:700;font-size:13px;padding:11px 20px;border-radius:30px;text-decoration:none;display:inline-flex;align-items:center;gap:7px;transition:transform .15s,box-shadow .15s;white-space:nowrap}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(249,243,233,.18)}
+@media(max-width:860px){.nav-links{display:none}}
+
+/* hero */
+.hero{padding:120px 0 90px;position:relative}
+.hero-glow{position:absolute;top:-100px;right:-5%;width:680px;height:680px;border-radius:50%;
+  background:radial-gradient(circle,rgba(110,35,215,.30),transparent 62%);filter:blur(50px);z-index:0;pointer-events:none}
+.hero-layout{display:grid;grid-template-columns:1.25fr .75fr;gap:60px;align-items:start;position:relative;z-index:1}
+@media(max-width:920px){.hero-layout{grid-template-columns:1fr;gap:44px}}
+.hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(44px,6.4vw,86px);line-height:1.02;letter-spacing:-.025em;margin:22px 0 28px;color:var(--cream)}
+.hero h1 em{font-style:italic;color:var(--purple-light)}
+.hero .lead{font-size:17px;color:var(--txt-dim);max-width:520px;margin-bottom:36px;line-height:1.7}
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap}
+.btn-primary{background:var(--cream);color:var(--ink);font-weight:700;font-size:15px;padding:15px 28px;border-radius:34px;text-decoration:none;display:inline-flex;align-items:center;gap:9px;transition:transform .15s,box-shadow .15s}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(249,243,233,.2)}
+.btn-ghost{background:transparent;color:var(--cream);font-weight:700;font-size:15px;padding:15px 26px;border-radius:34px;text-decoration:none;border:1px solid var(--border);display:inline-flex;align-items:center;gap:9px;transition:border-color .15s,background .15s}
+.btn-ghost:hover{border-color:var(--purple);background:rgba(110,35,215,.08)}
+
+/* stat cards */
+.stat-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.stat-card{background:var(--card);border:1px solid var(--border-2);border-radius:18px;padding:24px;transition:border-color .2s,transform .2s}
+.stat-card:hover{border-color:rgba(110,35,215,.4);transform:translateY(-2px)}
+.stat-card .num{font-family:var(--mono);font-weight:700;font-size:34px;color:var(--purple-light);line-height:1;margin-bottom:14px}
+.stat-card .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--txt-faint);line-height:1.5}
+
+/* positioning strip */
+.strip{border-top:1px solid var(--border-2);border-bottom:1px solid var(--border-2);padding:26px 0}
+.strip-inner{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+@media(max-width:760px){.strip-inner{grid-template-columns:1fr 1fr;gap:20px}}
+.strip-item{display:flex;flex-direction:column;gap:4px}
+.strip-item .v{font-weight:900;font-size:16px;color:var(--cream)}
+.strip-item .k{font-size:12.5px;color:var(--txt-dim)}
+
+/* section */
+.section{padding:100px 0}
+.section-head{max-width:760px;margin-bottom:54px}
+.section-head h2{font-family:var(--serif);font-weight:400;font-size:clamp(30px,4.6vw,52px);line-height:1.08;letter-spacing:-.02em;color:var(--cream);margin:14px 0 18px}
+.section-head p{font-size:16.5px;color:var(--txt-dim);line-height:1.7}
+
+/* compare cards */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:820px){.compare{grid-template-columns:1fr}}
+.cmp{border-radius:20px;padding:34px;border:1px solid var(--border-2)}
+.cmp.old{background:var(--card)}
+.cmp.new{background:linear-gradient(160deg,rgba(110,35,215,.12),var(--card-2));border-color:rgba(110,35,215,.3)}
+.cmp .tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;padding:6px 12px;border-radius:20px;margin-bottom:22px}
+.cmp.old .tag{background:rgba(249,243,233,.06);color:var(--txt-faint)}
+.cmp.new .tag{background:rgba(110,35,215,.18);color:var(--purple-light)}
+.cmp h3{font-family:var(--serif);font-weight:500;font-size:23px;color:var(--cream);margin-bottom:22px}
+.cmp ul{list-style:none;display:flex;flex-direction:column;gap:15px}
+.cmp li{font-size:14.5px;line-height:1.55;padding-left:26px;position:relative;color:var(--txt-dim)}
+.cmp.old li::before{content:'·';position:absolute;left:6px;color:var(--txt-faint);font-weight:800;font-size:20px;top:-3px}
+.cmp.new li::before{content:'→';position:absolute;left:0;color:var(--purple-light);font-weight:700}
+.cmp.new li{color:var(--txt)}
+
+/* method stages */
+.stages{display:grid;grid-template-columns:repeat(7,1fr);gap:12px}
+@media(max-width:1000px){.stages{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:640px){.stages{grid-template-columns:repeat(2,1fr)}}
+.stage{background:var(--card);border:1px solid var(--border-2);border-radius:14px;padding:20px 16px;min-height:190px;display:flex;flex-direction:column;transition:border-color .2s,transform .2s;position:relative;overflow:hidden}
+.stage:hover{border-color:rgba(110,35,215,.4);transform:translateY(-3px)}
+.stage::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--purple),transparent);opacity:0;transition:opacity .2s}
+.stage:hover::after{opacity:1}
+.stage .sn{font-family:var(--mono);font-size:11px;color:var(--purple-light);margin-bottom:16px;font-weight:500}
+.stage .st{font-family:var(--serif);font-weight:500;font-size:18px;color:var(--cream);margin-bottom:10px}
+.stage .sd{font-size:12.5px;color:var(--txt-dim);line-height:1.5}
+
+/* coeficiente box */
+.coef{margin-top:24px;background:linear-gradient(135deg,rgba(110,35,215,.10),var(--card));border:1px solid rgba(110,35,215,.25);border-radius:20px;padding:34px 38px}
+.coef .eyebrow{margin-bottom:14px;display:block}
+.coef p{font-size:16px;color:var(--txt);line-height:1.7;max-width:880px}
+.coef p strong{color:var(--purple-light);font-weight:700}
+
+/* architecture layers */
+.layers{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:820px){.layers{grid-template-columns:1fr}}
+.layer{background:var(--card);border:1px solid var(--border-2);border-radius:20px;padding:34px;transition:border-color .2s,transform .2s}
+.layer:hover{border-color:rgba(110,35,215,.35);transform:translateY(-2px)}
+.layer-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;gap:14px}
+.layer .ln{font-family:var(--mono);font-size:13px;font-weight:700}
+.layer .lstage{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--txt-faint);border:1px solid var(--border);padding:6px 11px;border-radius:20px;text-align:right}
+.layer h3{font-family:var(--serif);font-weight:500;font-size:24px;color:var(--cream);margin-bottom:14px}
+.layer .ldesc{font-size:14.5px;color:var(--txt-dim);line-height:1.65;margin-bottom:24px}
+.layer .delv-label{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--txt-faint);margin-bottom:14px;padding-top:18px;border-top:1px solid var(--border-2)}
+.layer ul{list-style:none;display:flex;flex-direction:column;gap:11px}
+.layer li{font-size:13.5px;color:var(--txt-dim);padding-left:20px;position:relative;line-height:1.5}
+.layer li::before{content:'—';position:absolute;left:0;color:var(--purple);font-weight:700}
+.c1{color:var(--purple-light)}.c2{color:#A78BE8}.c3{color:#C5A7EF}.c4{color:#8B4FDF}
+
+/* principles */
+.principles{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:820px){.principles{grid-template-columns:1fr}}
+.principle{background:var(--card);border:1px solid var(--border-2);border-radius:20px;padding:34px;transition:border-color .2s,transform .2s}
+.principle:hover{border-color:rgba(110,35,215,.35);transform:translateY(-2px)}
+.principle .pn{font-family:var(--mono);font-size:12px;color:var(--purple-light);margin-bottom:18px;font-weight:500}
+.principle h3{font-family:var(--serif);font-weight:500;font-size:25px;color:var(--cream);margin-bottom:14px;line-height:1.2}
+.principle p{font-size:14.5px;color:var(--txt-dim);line-height:1.7}
+
+/* CTA */
+.cta-section{background:var(--cream);color:var(--ink);position:relative;z-index:1}
+.cta-inner{max-width:1180px;margin:0 auto;padding:110px 32px}
+.cta-inner .eyebrow{color:var(--purple)}
+.cta-inner h2{font-family:var(--serif);font-weight:400;font-size:clamp(34px,5.4vw,64px);line-height:1.04;letter-spacing:-.025em;color:var(--ink);margin:16px 0 22px;max-width:760px}
+.cta-inner .lead{font-size:17px;color:rgba(14,14,14,.65);max-width:540px;margin-bottom:36px;line-height:1.7}
+.cta-btns{display:flex;gap:14px;flex-wrap:wrap}
+.btn-dark{background:var(--ink);color:var(--cream);font-weight:700;font-size:15px;padding:16px 30px;border-radius:34px;text-decoration:none;display:inline-flex;align-items:center;gap:9px;transition:transform .15s,box-shadow .15s}
+.btn-dark:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(14,14,14,.25)}
+.btn-line{background:transparent;color:var(--ink);font-weight:700;font-size:15px;padding:16px 28px;border-radius:34px;text-decoration:none;border:1px solid rgba(14,14,14,.25);display:inline-flex;align-items:center;gap:9px;transition:border-color .15s}
+.btn-line:hover{border-color:var(--purple)}
+
+/* footer */
+footer{background:var(--night);position:relative;z-index:1;padding:64px 0 40px;border-top:1px solid var(--border-2)}
+.foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:40px;margin-bottom:48px}
+@media(max-width:760px){.foot-grid{grid-template-columns:1fr;gap:30px}}
+.foot-brand{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.foot-brand svg{height:28px}
+.foot-brand .bname{font-weight:900;font-size:17px;color:var(--cream)}
+.foot-about{font-size:13.5px;color:var(--txt-dim);line-height:1.7;max-width:340px}
+.foot-col h4{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--txt-faint);margin-bottom:16px}
+.foot-col a{display:block;font-size:14px;color:var(--txt-dim);text-decoration:none;margin-bottom:11px;transition:color .15s}
+.foot-col a:hover{color:var(--cream)}
+.foot-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:28px;border-top:1px solid var(--border-2);flex-wrap:wrap;gap:12px}
+.foot-bottom span{font-family:var(--mono);font-size:11px;color:var(--txt-faint);letter-spacing:.04em}
+
+/* reveal animation */
+@keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.reveal{animation:rise .7s cubic-bezier(.2,.7,.2,1) both}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="brand"><svg viewBox="358.0 228.3 588.5 588.5" xmlns="http://www.w3.org/2000/svg"  style="height:30px;width:auto"><path d="M485.876 298.397C505.818 295.157 530.184 303.278 543.749 318.183C551.799 327.028 558.664 337.485 565.541 347.295L597.582 393.428C629.127 439.154 662.493 486.353 693.113 532.455L693.088 398.93L693.078 357.332C693.079 347.525 690.718 330.384 698.752 324.009C702.184 321.333 706.566 320.187 710.869 320.842C715.023 321.427 718.726 323.768 721.036 327.27C722.882 330.081 723.691 333.409 723.724 336.729C723.906 355.472 723.772 374.405 723.747 393.134L723.727 500.82L723.748 554.816C723.775 571.325 727.378 607.964 697.375 591.46C693.734 589.457 670.288 554.326 666.251 548.513L564.785 401.18L538.591 363.423C527.545 347.512 519.979 331.418 498.932 329.01C479.259 326.759 460.274 339.503 457.485 359.537C455.645 372.753 456.704 389.25 456.719 402.766L456.708 487.305L456.688 619.754L456.647 662.246C456.641 670.135 456.771 677.959 456.861 685.835C457.132 709.592 484.269 726.124 504.335 710.931C509.908 706.634 513.838 700.554 515.469 693.708C517.415 685.261 516.769 657.021 516.764 646.878L516.761 527.301C516.818 517.541 516.798 507.78 516.701 498.02C516.597 485.382 513.701 462.958 535.6 464.928C543.823 465.668 551.983 479.546 556.79 486.359L660.781 629.04L694.671 675.875C700.786 684.323 706.736 692.986 713.389 701.003C727.053 717.47 755.475 721.902 771.722 706.786C776.763 702.063 780.269 695.934 781.786 689.195C784.225 678.174 783.002 651.269 783.221 639.052C783.875 602.52 782.255 564.305 783.416 527.868C795.058 525.798 800.647 523.538 811.311 518.655C815.408 529.147 814.062 548.603 814.08 560.525L814.083 617.145L814.079 658.204C814.071 669.01 814.41 679.181 812.887 689.933C804.672 747.921 736.363 764.356 695.374 727.332C686.603 719.409 679.962 708.85 673.005 699.307L643.501 658.629L547.473 526.714L547.429 638.615C547.439 652.109 548.277 684.224 546.273 696.208C544.622 706.057 540.713 715.391 534.853 723.478C525.714 735.999 511.936 744.333 496.604 746.613C480.788 748.999 465.137 745.949 452.178 736.376C438.272 726.043 429.104 710.552 426.737 693.389C425.343 683.413 426.044 653.968 426.057 642.247L426.052 542.783L426.013 420.096L426.01 382.993C426.013 375.223 425.828 364.371 426.766 356.817C428.26 345.034 432.825 333.85 440.003 324.387C451.631 309.094 467.041 300.916 485.876 298.397Z" fill="#F9F3E9"/><path d="M809.777 298.445C823.32 297.453 841.688 302.85 851.151 311.441C914.241 368.727 857.967 472.37 790.842 498.932C784.594 501.404 782.387 502.577 775.877 501.907C764.391 496.562 765.715 487.043 774.809 479.936C777.818 477.584 781.037 475.076 783.967 472.625C787.554 469.586 790.931 466.307 794.073 462.81C798.211 458.228 817.541 434.247 807.347 426.085C806.295 425.243 798.448 423.768 796.398 423.325C786.587 421.203 777.366 416.237 769.745 409.743C757.325 399.229 749.598 384.205 748.271 367.986C745.285 330.227 772.545 301.073 809.777 298.445Z" fill="#8B4FDF"/></svg><span class="bname">Nettu's</span></a>
+    <div class="nav-links">
+      <a href="#metodo">Metodologia</a>
+      <a href="#arquitetura">Arquitetura</a>
+      <a href="#principios">Princípios</a>
+    </div>
+    <a href="#contato" class="nav-cta">Agendar diagnóstico →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-glow"></div>
+  <div class="wrap">
+    <div class="hero-layout">
+      <div class="reveal">
+        <span class="eyebrow">Arquitetura de Receita · B2B</span>
+        <h1>Construímos a <em>máquina de receita</em> previsível que a sua empresa ainda não tem.</h1>
+        <p class="lead">Mapeamos os 7 estágios da jornada do seu cliente, entregamos os blocos operacionais que faltam e colocamos pra funcionar em até 12 semanas. Operação própria, não consultoria.</p>
+        <div class="hero-ctas">
+          <a href="#contato" class="btn-primary">Agendar diagnóstico →</a>
+          <a href="#metodo" class="btn-ghost">Conhecer a metodologia</a>
+        </div>
+      </div>
+      <div class="stat-cards reveal" style="animation-delay:.12s">
+        <div class="stat-card"><div class="num">7</div><div class="lbl">Estágios da<br>jornada</div></div>
+        <div class="stat-card"><div class="num">4</div><div class="lbl">Camadas<br>modulares</div></div>
+        <div class="stat-card"><div class="num">12 sem</div><div class="lbl">Pra colocar<br>de pé</div></div>
+        <div class="stat-card"><div class="num">100%</div><div class="lbl">Operação<br>própria</div></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- POSITIONING STRIP (honest, not vanity metrics) -->
+<div class="strip">
+  <div class="wrap strip-inner">
+    <div class="strip-item"><span class="v">Operação própria</span><span class="k">Não consultoria</span></div>
+    <div class="strip-item"><span class="v">Arquitetura modular</span><span class="k">Paga pelo que precisa</span></div>
+    <div class="strip-item"><span class="v">Dado como bússola</span><span class="k">Decisão por evidência</span></div>
+    <div class="strip-item"><span class="v">Uberaba · MG</span><span class="k">Atendimento Brasil</span></div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">A categoria</span>
+      <h2>Não somos agência de tráfego. Não somos mentoria. Somos arquitetura.</h2>
+      <p>Agência tradicional aperta um parafuso da máquina de receita e torce pra ele segurar tudo. Mentoria ensina você a apertar sozinho. A Nettu's constrói a máquina inteira e garante que cada peça funcione integrada.</p>
+    </div>
+    <div class="compare">
+      <div class="cmp old">
+        <span class="tag">Modelo convencional</span>
+        <h3>Agência de tráfego / consultoria</h3>
+        <ul>
+          <li>Otimiza uma camada (mídia, CRM, SDR) e deixa o resto à sua sorte</li>
+          <li>Entrega relatório e orientação · você executa</li>
+          <li>Mede ROAS da campanha, não da operação</li>
+          <li>Escopo fechado · mudanças geram orçamento extra</li>
+          <li>Escala depende de você contratar mais fornecedores</li>
+        </ul>
+      </div>
+      <div class="cmp new">
+        <span class="tag">Nettu's · Arquitetura de Receita</span>
+        <h3>Arquitetura integrada ponta a ponta</h3>
+        <ul>
+          <li>Diagnostica os 7 estágios da jornada e ataca onde o Coeficiente de Alavanca manda</li>
+          <li>Entrega ativos funcionando · você opera o que já está pronto</li>
+          <li>Mede ROAS acumulado e LTV, não só o custo por lead</li>
+          <li>Arquitetura modular · você paga pelos blocos que precisa</li>
+          <li>Opera dentro da sua stack e do seu time · sem fornecedor paralelo</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- METHOD -->
+<section class="section" id="metodo">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">O método</span>
+      <h2>Todo cliente da sua empresa passa por 7 estágios antes de virar receita.</h2>
+      <p>Conhecer esses estágios é o mínimo. Saber qual deles está travando a receita hoje, e ter arquitetura pra destravar, é a diferença entre correr atrás de lead novo todo mês e construir uma máquina que acumula.</p>
+    </div>
+    <div class="stages">
+<div class="stage"><div class="sn">01</div><div class="st">Descoberta</div><div class="sd">Seu cliente descobre que você existe</div></div>
+<div class="stage"><div class="sn">02</div><div class="st">Atenção</div><div class="sd">Ele para e presta atenção</div></div>
+<div class="stage"><div class="sn">03</div><div class="st">Consideração</div><div class="sd">Avalia se faz sentido pra dor dele</div></div>
+<div class="stage"><div class="sn">04</div><div class="st">Decisão</div><div class="sd">Decide comprar, ou desiste</div></div>
+<div class="stage"><div class="sn">05</div><div class="st">Experiência</div><div class="sd">Usa o produto e sente o resultado</div></div>
+<div class="stage"><div class="sn">06</div><div class="st">Recompra</div><div class="sd">Volta e compra de novo</div></div>
+<div class="stage"><div class="sn">07</div><div class="st">Indicação</div><div class="sd">Vira promotor ativo do seu negócio</div></div>
+    </div>
+    <div class="coef">
+      <span class="eyebrow">Coeficiente de Alavanca</span>
+      <p>Ferramenta proprietária que calcula qual dos 7 estágios, se destravado agora, gera o maior impacto em receita. É o que prioriza onde a Nettu's <strong>ataca primeiro</strong>, em vez de tocar em todos ao mesmo tempo e não mover nenhum.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="arquitetura">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Arquitetura modular</span>
+      <h2>Quatro camadas que cobrem a jornada inteira.</h2>
+      <p>Cada projeto combina os blocos que resolvem as dores específicas do diagnóstico. Você não paga por aquisição se o seu problema é retenção, nem por reativação se o gargalo é topo de funil. Arquitetura real, não pacote fechado.</p>
+    </div>
+    <div class="layers">
+<div class="layer">
+      <div class="layer-top"><div class="ln c1">01</div><div class="lstage">Estágios 1–3 · Descoberta → Consideração</div></div>
+      <h3>Aquisição qualificada</h3>
+      <p class="ldesc">Mídia, conteúdo e ativos que trazem leads já quase no ponto de comprar. A filtragem começa no criativo, não no comercial.</p>
+      <div class="delv-label">Entregáveis possíveis</div>
+      <ul><li>Diagnóstico estratégico da mídia ativa</li><li>Reconstrução criativa por qualificação de dor</li><li>Funil de VSL qualificador</li><li>Estratégia de conteúdo orgânico integrada</li><li>Estruturação de outbound frio com roteiros</li><li>Páginas de captura otimizadas por nicho</li></ul>
+    </div>
+<div class="layer">
+      <div class="layer-top"><div class="ln c2">02</div><div class="lstage">Estágios 3–5 · Consideração → Experiência</div></div>
+      <h3>Qualificação e conversão</h3>
+      <p class="ldesc">Filtro em múltiplas camadas + processo de reunião que fecha em vez de empurrar. Closer entra sabendo tudo. Zero reunião às cegas.</p>
+      <div class="delv-label">Entregáveis possíveis</div>
+      <ul><li>Sistema de scoring por perfil + julgamento do SDR</li><li>Régua de aquecimento multicanal (WhatsApp, email, SMS)</li><li>Ritual de pré-reunião com briefing automatizado por IA</li><li>Call Flow consultivo estruturado</li><li>Protocolo de descoberta na reunião</li><li>Treinamento de time comercial · closers e SDRs</li></ul>
+    </div>
+<div class="layer">
+      <div class="layer-top"><div class="ln c3">03</div><div class="lstage">Estágios 5–7 · Experiência → Indicação</div></div>
+      <h3>Retenção e LTV composto</h3>
+      <p class="ldesc">Transforma cada cliente num motor de receita que cresce ao longo do tempo. Reativa base descartada, aumenta ticket médio, fecha o loop com indicação formal.</p>
+      <div class="delv-label">Entregáveis possíveis</div>
+      <ul><li>Motor de reativação de base dormente por motivo de perda</li><li>Playbook de cross-sell e upsell com timing otimizado</li><li>Programa estruturado de indicação B2B</li><li>Rituais trimestrais com base ativa · coleta de cases</li><li>Escada de produtos mapeada</li><li>Roteiros de entrevista de cancelamento</li></ul>
+    </div>
+<div class="layer">
+      <div class="layer-top"><div class="ln c4">04</div><div class="lstage">Transversal · Opera em todos os estágios</div></div>
+      <h3>Inteligência operacional</h3>
+      <p class="ldesc">Dado como bússola. A operação inteira fica visível em tempo real: gargalo identificado semana a semana, decisão por evidência, não por sensação.</p>
+      <div class="delv-label">Entregáveis possíveis</div>
+      <ul><li>Dashboard dos 7 estágios operando em tempo real</li><li>Loop semanal mídia × comercial · gravações informam criativo</li><li>Instrumentação de CRM e custom fields</li><li>Transcrição automática de ligações e scoring por IA</li><li>Métricas de LTV por cohort e por origem</li><li>Feedback loop anúncio ↔ reunião ↔ entrega</li></ul>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="principios">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Como trabalhamos</span>
+      <h2>Quatro compromissos que mudam o tipo de parceiro que somos.</h2>
+      <p>A Nettu's nasceu querendo ser o contrário de tudo que a gente sente quando contrata fornecedor. Aqui está o que fazemos diferente, e o que você pode cobrar da gente desde o primeiro dia.</p>
+    </div>
+    <div class="principles">
+<div class="principle"><div class="pn">01</div><h3>Entregamos ativos, não orientação.</h3><p>É fácil dizer "você precisa fazer X". Difícil é fazer X pra você. A gente entrega criativos prontos, roteiros escritos, scripts estruturados, régua configurada, dashboard operando. Seu time implementa o que já está feito, ou a gente implementa junto.</p></div>
+<div class="principle"><div class="pn">02</div><h3>Usamos a stack que você já tem.</h3><p>Nenhuma ferramenta nova precisa ser comprada. Se você já usa WhatsApp API, seu CRM e suas plataformas de mídia, a gente opera em cima disso. Zero fornecedor paralelo, zero migração forçada, zero dependência da nossa infra.</p></div>
+<div class="principle"><div class="pn">03</div><h3>Arquitetura modular · você paga pelo que precisa.</h3><p>O diagnóstico define quais blocos fazem sentido pro seu momento. Se a sua dor é retenção, não montamos aquisição do zero. Se a sua dor é topo de funil, não vamos vender LTV antes de resolver o básico. Custo proporcional à necessidade.</p></div>
+<div class="principle"><div class="pn">04</div><h3>Métrica clara por estágio · nunca voo cego.</h3><p>Cada bloco tem uma métrica operacional (a coisa que ele deveria mover) e uma métrica de impacto (o que muda no seu resultado final). Você enxerga semanalmente se o que construímos está funcionando, e se não está, ajustamos em cima do dado.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section" id="contato">
+  <div class="cta-inner">
+    <span class="eyebrow">Próximo passo</span>
+    <h2>Vamos diagnosticar a jornada da sua operação?</h2>
+    <p class="lead">60 minutos de conversa estruturada pra entender onde o Coeficiente de Alavanca aponta no seu funil, e se faz sentido construir junto a partir daí.</p>
+    <div class="cta-btns">
+      <a href="#" class="btn-dark">Agendar diagnóstico →</a>
+      <a href="#metodo" class="btn-line">Ler a metodologia de novo</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-brand"><svg viewBox="358.0 228.3 588.5 588.5" xmlns="http://www.w3.org/2000/svg" style="height:28px;width:auto"><path d="M485.876 298.397C505.818 295.157 530.184 303.278 543.749 318.183C551.799 327.028 558.664 337.485 565.541 347.295L597.582 393.428C629.127 439.154 662.493 486.353 693.113 532.455L693.088 398.93L693.078 357.332C693.079 347.525 690.718 330.384 698.752 324.009C702.184 321.333 706.566 320.187 710.869 320.842C715.023 321.427 718.726 323.768 721.036 327.27C722.882 330.081 723.691 333.409 723.724 336.729C723.906 355.472 723.772 374.405 723.747 393.134L723.727 500.82L723.748 554.816C723.775 571.325 727.378 607.964 697.375 591.46C693.734 589.457 670.288 554.326 666.251 548.513L564.785 401.18L538.591 363.423C527.545 347.512 519.979 331.418 498.932 329.01C479.259 326.759 460.274 339.503 457.485 359.537C455.645 372.753 456.704 389.25 456.719 402.766L456.708 487.305L456.688 619.754L456.647 662.246C456.641 670.135 456.771 677.959 456.861 685.835C457.132 709.592 484.269 726.124 504.335 710.931C509.908 706.634 513.838 700.554 515.469 693.708C517.415 685.261 516.769 657.021 516.764 646.878L516.761 527.301C516.818 517.541 516.798 507.78 516.701 498.02C516.597 485.382 513.701 462.958 535.6 464.928C543.823 465.668 551.983 479.546 556.79 486.359L660.781 629.04L694.671 675.875C700.786 684.323 706.736 692.986 713.389 701.003C727.053 717.47 755.475 721.902 771.722 706.786C776.763 702.063 780.269 695.934 781.786 689.195C784.225 678.174 783.002 651.269 783.221 639.052C783.875 602.52 782.255 564.305 783.416 527.868C795.058 525.798 800.647 523.538 811.311 518.655C815.408 529.147 814.062 548.603 814.08 560.525L814.083 617.145L814.079 658.204C814.071 669.01 814.41 679.181 812.887 689.933C804.672 747.921 736.363 764.356 695.374 727.332C686.603 719.409 679.962 708.85 673.005 699.307L643.501 658.629L547.473 526.714L547.429 638.615C547.439 652.109 548.277 684.224 546.273 696.208C544.622 706.057 540.713 715.391 534.853 723.478C525.714 735.999 511.936 744.333 496.604 746.613C480.788 748.999 465.137 745.949 452.178 736.376C438.272 726.043 429.104 710.552 426.737 693.389C425.343 683.413 426.044 653.968 426.057 642.247L426.052 542.783L426.013 420.096L426.01 382.993C426.013 375.223 425.828 364.371 426.766 356.817C428.26 345.034 432.825 333.85 440.003 324.387C451.631 309.094 467.041 300.916 485.876 298.397Z" fill="#F9F3E9"/><path d="M809.777 298.445C823.32 297.453 841.688 302.85 851.151 311.441C914.241 368.727 857.967 472.37 790.842 498.932C784.594 501.404 782.387 502.577 775.877 501.907C764.391 496.562 765.715 487.043 774.809 479.936C777.818 477.584 781.037 475.076 783.967 472.625C787.554 469.586 790.931 466.307 794.073 462.81C798.211 458.228 817.541 434.247 807.347 426.085C806.295 425.243 798.448 423.768 796.398 423.325C786.587 421.203 777.366 416.237 769.745 409.743C757.325 399.229 749.598 384.205 748.271 367.986C745.285 330.227 772.545 301.073 809.777 298.445Z" fill="#8B4FDF"/></svg><span class="bname">Nettu's</span></div>
+        <p class="foot-about">Arquitetura de Receita · Construímos máquinas comerciais previsíveis em 12 semanas. Operação própria, arquitetura modular, dado como bússola.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Método</h4>
+        <a href="#metodo">Metodologia</a>
+        <a href="#arquitetura">Arquitetura</a>
+        <a href="#principios">Princípios</a>
+      </div>
+      <div class="foot-col">
+        <h4>Contato</h4>
+        <a href="mailto:contato@nettus.com.br">contato@nettus.com.br</a>
+        <a href="#contato">Agendar diagnóstico</a>
+        <a href="#">Uberaba · MG</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Nettu's · Todos os direitos reservados</span>
+      <span>Arquitetura de receita, não tática solta</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
