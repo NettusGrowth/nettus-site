@@ -204,8 +204,9 @@ footer{background:var(--night);position:relative;z-index:1;padding:44px 0 28px;b
 .vanity-pill{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;padding:5px 11px;border-radius:20px;border:1px solid var(--border-2);color:var(--txt-faint);text-decoration:line-through;text-decoration-color:rgba(237,231,220,.35)}
 /* shader section */
 #shader-section{position:relative;min-height:360px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(--night)}
-#shader-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-.shader-cnt{position:relative;z-index:1;text-align:center;padding:80px 32px;max-width:720px;margin:0 auto}
+#shader-section::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,.10);z-index:1;pointer-events:none}
+#shader-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:0}
+.shader-cnt{position:relative;z-index:2;text-align:center;padding:80px 32px;max-width:720px;margin:0 auto}
 .shader-cnt .eyebrow{margin-bottom:18px;display:block}
 .shader-cnt h2{font-family:var(--serif);font-weight:400;font-size:clamp(34px,5vw,62px);line-height:1.06;letter-spacing:-.025em;color:var(--cream);margin-bottom:16px}
 .shader-cnt p{font-size:17px;color:var(--txt-dim);line-height:1.72;max-width:540px;margin:0 auto}
@@ -559,7 +560,7 @@ function initShader(){
       float rv=0.05/abs(q.y+sin((rx+t)*xS)*yS);
       float gv=0.05/abs(q.y+sin((gx+t)*xS)*yS);
       float bv=0.05/abs(q.y+sin((bx+t)*xS)*yS);
-      gl_FragColor=vec4(rv*.55+bv*.12,gv*.07,bv*.92+rv*.18,1.);
+      gl_FragColor=vec4(rv*.43,gv*.14,bv*.84,1.);
     }`;
   function mk(type,src){const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);return s;}
   const prog=gl.createProgram();
