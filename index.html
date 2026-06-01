@@ -211,6 +211,31 @@ footer{background:var(--night);position:relative;z-index:1;padding:44px 0 28px;b
 .shader-cnt h2{font-family:var(--serif);font-weight:400;font-size:clamp(34px,5vw,62px);line-height:1.06;letter-spacing:-.025em;color:var(--cream);margin-bottom:16px}
 .shader-cnt p{font-size:17px;color:var(--txt-dim);line-height:1.72;max-width:540px;margin:0 auto}
 
+/* lamp */
+.lamp-section{position:relative;background:var(--night);overflow:hidden;padding-bottom:90px}
+.lamp-outer{position:relative;display:flex;width:100%;height:26rem;align-items:center;justify-content:center}
+.lamp-beam-l,.lamp-beam-r{position:absolute;top:0;height:13rem;overflow:visible;opacity:0;width:15rem;transition:width .85s cubic-bezier(.4,0,.2,1),opacity .85s ease}
+.lamp-beam-l{right:50%;background:conic-gradient(from 70deg at 50% 0%,#6E23D7,transparent,transparent)}
+.lamp-beam-r{left:50%;background:conic-gradient(from 290deg at 50% 0%,transparent,transparent,#6E23D7)}
+.lamp-section.lit .lamp-beam-l,.lamp-section.lit .lamp-beam-r{opacity:1;width:30rem}
+.lm{position:absolute;z-index:20;background:var(--night)}
+.lm-bot{width:100%;height:9rem;bottom:0;-webkit-mask-image:linear-gradient(to top,white,transparent);mask-image:linear-gradient(to top,white,transparent)}
+.lm-el{width:9rem;height:100%;left:0;bottom:0;-webkit-mask-image:linear-gradient(to right,white,transparent);mask-image:linear-gradient(to right,white,transparent)}
+.lm-er{width:9rem;height:100%;right:0;bottom:0;-webkit-mask-image:linear-gradient(to left,white,transparent);mask-image:linear-gradient(to left,white,transparent)}
+.lamp-blur{position:absolute;top:50%;height:10rem;width:100%;transform:translateY(2rem) scaleX(1.5);background:var(--night);filter:blur(40px)}
+.lamp-glow-lg{position:absolute;top:50%;z-index:50;height:8rem;width:28rem;transform:translateY(-50%);border-radius:9999px;background:#6E23D7;opacity:.42;filter:blur(64px)}
+.lamp-glow-sm{position:absolute;top:50%;z-index:30;height:8rem;width:0;transform:translateY(-5.5rem);border-radius:9999px;background:#8B4FDF;filter:blur(32px);transition:width .8s ease .1s}
+.lamp-section.lit .lamp-glow-sm{width:16rem}
+.lamp-line{position:absolute;top:50%;z-index:50;height:2px;width:0;transform:translateY(-6.5rem);background:linear-gradient(90deg,transparent,#8B4FDF 25%,#C5A7EF 50%,#8B4FDF 75%,transparent);filter:drop-shadow(0 0 8px #6E23D7);transition:width .85s ease .12s}
+.lamp-section.lit .lamp-line{width:30rem}
+.lamp-cover{position:absolute;z-index:40;height:10rem;width:100%;top:50%;transform:translateY(-11.5rem);background:var(--night)}
+.lamp-cnt{position:relative;z-index:50;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 32px;margin-top:-5rem}
+.lamp-cnt .eyebrow{margin-bottom:14px;display:block}
+.lamp-h2{font-family:var(--serif);font-weight:400;font-size:clamp(28px,4.5vw,56px);line-height:1.1;letter-spacing:-.025em;color:var(--cream);margin:0 0 16px;opacity:0;transform:translateY(40px);transition:opacity .8s ease .35s,transform .8s ease .35s}
+.lamp-section.lit .lamp-h2{opacity:1;transform:translateY(0)}
+.lamp-sp{font-size:15.5px;color:var(--txt-dim);max-width:460px;line-height:1.7;opacity:0;transition:opacity .8s ease .55s}
+.lamp-section.lit .lamp-sp{opacity:1}
+
 /* rotating hero words */
 .rot-wrap{display:inline-block;position:relative;overflow:hidden;vertical-align:bottom;line-height:inherit}
 .rot-sizer{display:block;white-space:nowrap;visibility:hidden;pointer-events:none;font-style:italic;color:var(--purple-light)}
@@ -347,6 +372,30 @@ footer{background:var(--night);position:relative;z-index:1;padding:44px 0 28px;b
     </div>
   </div>
 </section>
+
+<!-- LAMP -->
+<div class="lamp-section" id="lamp">
+  <div class="lamp-outer">
+    <div class="lamp-beam-l">
+      <div class="lm lm-bot"></div>
+      <div class="lm lm-el"></div>
+    </div>
+    <div class="lamp-beam-r">
+      <div class="lm lm-bot"></div>
+      <div class="lm lm-er"></div>
+    </div>
+    <div class="lamp-blur"></div>
+    <div class="lamp-glow-lg"></div>
+    <div class="lamp-glow-sm"></div>
+    <div class="lamp-line"></div>
+    <div class="lamp-cover"></div>
+  </div>
+  <div class="lamp-cnt">
+    <span class="eyebrow">A metodologia</span>
+    <h2 class="lamp-h2">Sete estágios.<br>Um diagnóstico.<br>Nenhum tiro no escuro.</h2>
+    <p class="lamp-sp">O Coeficiente de Alavanca identifica qual estágio está travando a sua receita agora. A partir daí, construímos.</p>
+  </div>
+</div>
 
 <!-- METHOD -->
 <section class="section" id="metodo">
@@ -553,6 +602,15 @@ footer{background:var(--night);position:relative;z-index:1;padding:44px 0 28px;b
 </footer>
 
 <script>
+// Lamp IntersectionObserver
+const lampEl=document.getElementById('lamp');
+if(lampEl){
+  const lampObs=new IntersectionObserver(e=>{
+    if(e[0].isIntersecting){lampEl.classList.add('lit');lampObs.disconnect();}
+  },{threshold:.15});
+  lampObs.observe(lampEl);
+}
+
 // Rotating hero words
 (function(){
   const words=document.querySelectorAll('.rot-word');
