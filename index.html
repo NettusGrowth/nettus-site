@@ -211,6 +211,13 @@ footer{background:var(--night);position:relative;z-index:1;padding:44px 0 28px;b
 .shader-cnt h2{font-family:var(--serif);font-weight:400;font-size:clamp(34px,5vw,62px);line-height:1.06;letter-spacing:-.025em;color:var(--cream);margin-bottom:16px}
 .shader-cnt p{font-size:17px;color:var(--txt-dim);line-height:1.72;max-width:540px;margin:0 auto}
 
+/* rotating hero words */
+.rot-wrap{display:inline-block;position:relative;overflow:hidden;vertical-align:bottom;line-height:inherit}
+.rot-sizer{display:block;white-space:nowrap;visibility:hidden;pointer-events:none;font-style:italic;color:var(--purple-light)}
+.rot-word{position:absolute;top:0;left:0;right:0;white-space:nowrap;font-style:italic;color:var(--purple-light);transform:translateY(110%);opacity:0;transition:transform .65s cubic-bezier(.175,.885,.32,1.275),opacity .4s ease}
+.rot-word.rot-active{transform:translateY(0);opacity:1}
+.rot-word.rot-exit{transform:translateY(-110%);opacity:0}
+
 /* reveal animation */
 @keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 .reveal{animation:rise .7s cubic-bezier(.2,.7,.2,1) both}
@@ -238,7 +245,7 @@ footer{background:var(--night);position:relative;z-index:1;padding:44px 0 28px;b
     <div class="hero-layout">
       <div class="reveal">
         <span class="eyebrow">Arquitetura de Receita · B2B</span>
-        <h1>Construímos a <em>máquina de receita</em> previsível que a sua empresa ainda não tem.</h1>
+        <h1>Construímos a <em>máquina de receita</em> <span class="rot-wrap"><span class="rot-sizer">sustentável</span><span class="rot-word rot-active">previsível</span><span class="rot-word">escalável</span><span class="rot-word">integrada</span><span class="rot-word">mensurável</span><span class="rot-word">sustentável</span></span> que a sua empresa ainda não tem.</h1>
         <p class="lead">Mapeamos os 7 estágios da jornada do seu cliente, entregamos os blocos operacionais que faltam e colocamos pra funcionar em até 12 semanas. Operação própria, não consultoria.</p>
         <div class="hero-ctas">
           <a href="#contato" class="btn-primary">Agendar diagnóstico →</a>
@@ -546,6 +553,21 @@ footer{background:var(--night);position:relative;z-index:1;padding:44px 0 28px;b
 </footer>
 
 <script>
+// Rotating hero words
+(function(){
+  const words=document.querySelectorAll('.rot-word');
+  if(!words.length)return;
+  let cur=0;
+  setInterval(()=>{
+    const p=cur;
+    words[p].classList.remove('rot-active');
+    words[p].classList.add('rot-exit');
+    setTimeout(()=>words[p].classList.remove('rot-exit'),700);
+    cur=(cur+1)%words.length;
+    words[cur].classList.add('rot-active');
+  },2200);
+})();
+
 // WebGL shader — raw WebGL, sem Three.js
 function initShader(){
   const cv=document.getElementById('shader-canvas');
