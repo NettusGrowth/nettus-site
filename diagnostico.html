@@ -390,6 +390,32 @@ main{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:56px 24px
   var answers = {};
 
   var WHATSAPP_NUM = '5534984276448'; // 34 98427-6448, formato internacional pro wa.me
+  var LEAD_ENDPOINT = 'https://xwnkmzrycvcwwoqnzulb.supabase.co/functions/v1/diagnostico-lead';
+  var sessionId = (function(){
+    try{
+      if(window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    }catch(e){}
+    // fallback pra navegadores sem crypto.randomUUID
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c){
+      var r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8);
+      return v.toString(16);
+    });
+  })();
+
+  // Salva o progresso no CRM em segundo plano — nunca trava nem quebra o formulário.
+  // Chamado a cada etapa concluída assim que já temos nome+whatsapp (o mínimo pra virar lead).
+  function salvarProgresso(etapa, completo){
+    if(!answers.nome && !answers.nomeConfirma) return;
+    if(!answers.whatsapp && !answers.whatsappConfirma) return;
+    try{
+      fetch(LEAD_ENDPOINT, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        keepalive: true,
+        body: JSON.stringify({ session_id: sessionId, etapa: etapa, completo: !!completo, answers: answers })
+      }).catch(function(){ /* silencioso: nunca atrapalha a experiência do visitante */ });
+    }catch(e){ /* fetch indisponível ou bloqueado — segue o formulário normalmente */ }
+  }
 
   var segmentos = ['Serviços B2B','Serviços B2C','E-commerce','Indústria','Saúde e Bem-estar',
     'Educação e Treinamentos','SaaS / Tecnologia','Varejo','Construção Civil','Imobiliário',
@@ -556,30 +582,12 @@ main{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:56px 24px
       document.getElementById('f-nomeConfirma').value = answers.nome || '';
       document.getElementById('f-whatsappConfirma').value = answers.whatsapp || '';
     }
+    salvarProgresso(current, false);
     if(current < STEPS_WITH_PROGRESS - 1){
       irPara(current + 1);
     }
   }
   window.avancar = avancar;
-
-  function montarMensagemWhatsapp(){
-    var linhas = [
-      '*Novo diagnóstico de receita — Nettu\'s*','',
-      '*Nome:* ' + (answers.nomeConfirma || answers.nome || '-'),
-      '*Função:* ' + (answers.funcao || '-'),
-      '*E-mail:* ' + (answers.email || '-'),
-      '*WhatsApp:* ' + (answers.whatsappConfirma || answers.whatsapp || '-'),
-      '*Instagram/LinkedIn:* ' + (answers.social || '-'),
-      '','*Principal gargalo:* ' + (answers.gargalo || '-'),
-      '*Faturamento mensal:* ' + (answers.faturamento || '-'),
-      '*Pessoas na empresa:* ' + (answers.funcionarios || '-'),
-      '*Segmento:* ' + (answers.segmento || '-'),
-      '*Urgência:* ' + (answers.urgencia || '-'),
-      '*Tem sócios:* ' + (answers.socios || '-'),
-      '','Vim pelo diagnóstico do site.'
-    ];
-    return encodeURIComponent(linhas.join('\n'));
-  }
 
   function enviar(){
     var falha = validarPasso(current);
@@ -594,10 +602,13 @@ main{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:56px 24px
     btn.disabled = true;
     btn.textContent = 'Enviando…';
 
-    var msg = montarMensagemWhatsapp();
-    var wppLink = 'https://wa.me/' + WHATSAPP_NUM + '?text=' + msg;
+    // Link do WhatsApp sem mensagem pré-escrita — o lead já foi salvo no CRM
+    // (ver salvarProgresso), então esse botão é só um atalho de contato direto.
+    var wppLink = 'https://wa.me/' + WHATSAPP_NUM;
     document.getElementById('wppUrgente').href = wppLink;
     document.getElementById('wppUrgente2').href = wppLink;
+
+    salvarProgresso(10, true);
 
     try{
       localStorage.setItem('nettus_diagnostico_' + Date.now(), JSON.stringify(answers));
