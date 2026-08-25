@@ -233,6 +233,15 @@ footer{background:var(--night);position:relative;z-index:1;padding:44px 0 28px;b
 /* reveal animation */
 @keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 .reveal{animation:rise .7s cubic-bezier(.2,.7,.2,1) both}
+
+/* botão flutuante de WhatsApp */
+.wpp-float{position:fixed;bottom:26px;right:26px;z-index:998;width:60px;height:60px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 10px 28px rgba(37,211,102,.4);transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s}
+.wpp-float::before{content:'';position:absolute;inset:0;border-radius:50%;background:#25D366;opacity:.55;animation:wppPulse 2.4s ease-out infinite;z-index:-1}
+.wpp-float:hover{transform:scale(1.08);box-shadow:0 12px 34px rgba(37,211,102,.55)}
+.wpp-float:active{transform:scale(.95)}
+.wpp-float svg{width:30px;height:30px;fill:#fff;position:relative}
+@keyframes wppPulse{0%{transform:scale(1);opacity:.55}100%{transform:scale(1.7);opacity:0}}
+@media(max-width:520px){.wpp-float{bottom:18px;right:18px;width:54px;height:54px}.wpp-float svg{width:27px;height:27px}}
 </style>
 </head>
 <body>
@@ -711,5 +720,9 @@ faqItems.forEach(el=>faqObs.observe(el));
   setTimeout(()=>{rsz();window.addEventListener('resize',rsz);requestAnimationFrame(frame);},120);
 })();
 </script>
+
+<a href="https://wa.me/5534984276448" target="_blank" rel="noopener" class="wpp-float" aria-label="Falar com a Nettu's no WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2m0 1.67c2.24 0 4.35.87 5.93 2.46a8.23 8.23 0 0 1 2.42 5.85c0 4.56-3.71 8.27-8.28 8.27a8.3 8.3 0 0 1-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.26 8.26 0 0 1-1.26-4.4c0-4.57 3.72-8.32 8.18-8.32M8.53 7.4c-.16 0-.43.06-.66.31c-.22.25-.87.85-.87 2.07c0 1.22.89 2.4 1.01 2.56c.13.17 1.75 2.67 4.31 3.74c2.13.89 2.56.71 3.03.67c.46-.04 1.5-.61 1.71-1.2c.21-.59.21-1.09.15-1.2c-.07-.11-.24-.17-.5-.3c-.27-.13-1.58-.78-1.82-.87c-.25-.09-.43-.13-.6.14c-.19.26-.7.87-.86 1.05c-.16.19-.32.21-.58.07c-.27-.13-1.13-.42-2.15-1.33c-.79-.71-1.33-1.58-1.48-1.85c-.16-.26-.02-.4.11-.53c.12-.12.27-.32.4-.48c.14-.16.18-.27.28-.45c.09-.19.05-.35-.02-.49c-.07-.13-.6-1.49-.85-2.03c-.22-.5-.44-.48-.6-.48z"/></svg>
+</a>
 </body>
 </html>

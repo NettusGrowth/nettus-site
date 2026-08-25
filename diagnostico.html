@@ -34,9 +34,11 @@ body{background:var(--night);color:var(--txt);font-family:var(--sans);line-heigh
 .brand-mini{display:flex;align-items:center;gap:8px}
 .brand-mini svg{height:22px;width:auto}
 .brand-mini span{font-weight:900;font-size:14.5px;color:var(--cream)}
-.back-btn{background:none;border:none;color:var(--txt-faint);font-family:var(--sans);font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;padding:6px 4px;transition:color .15s;visibility:hidden}
-.back-btn.show{visibility:visible}
-.back-btn:hover{color:var(--cream)}
+.back-btn{background:var(--card);border:1.5px solid var(--border-2);color:var(--txt);font-family:var(--sans);font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;padding:9px 16px 9px 12px;border-radius:30px;transition:border-color .15s,background .15s,transform .15s;visibility:hidden;opacity:0}
+.back-btn.show{visibility:visible;opacity:1}
+.back-btn:hover{border-color:rgba(110,35,215,.45);background:var(--card-2)}
+.back-btn:active{transform:scale(.96)}
+.back-btn svg{flex-shrink:0}
 .progress-track{height:4px;border-radius:99px;background:var(--border);overflow:hidden}
 .progress-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--purple),var(--purple-light));width:0%;transition:width .5s cubic-bezier(.4,0,.2,1)}
 
@@ -144,6 +146,15 @@ main{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:56px 24px
   .opt{padding:15px 17px}
   .q-input{padding:16px 18px;font-size:16px}
 }
+
+/* botão flutuante de WhatsApp */
+.wpp-float{position:fixed;bottom:26px;right:26px;z-index:998;width:60px;height:60px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 10px 28px rgba(37,211,102,.4);transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s}
+.wpp-float::before{content:'';position:absolute;inset:0;border-radius:50%;background:#25D366;opacity:.55;animation:wppPulse 2.4s ease-out infinite;z-index:-1}
+.wpp-float:hover{transform:scale(1.08);box-shadow:0 12px 34px rgba(37,211,102,.55)}
+.wpp-float:active{transform:scale(.95)}
+.wpp-float svg{width:30px;height:30px;fill:#fff;position:relative}
+@keyframes wppPulse{0%{transform:scale(1);opacity:.55}100%{transform:scale(1.7);opacity:0}}
+@media(max-width:520px){.wpp-float{bottom:18px;right:18px;width:54px;height:54px}.wpp-float svg{width:27px;height:27px}}
 </style>
 </head>
 <body>
@@ -426,24 +437,36 @@ main{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:56px 24px
   var progressFill = document.getElementById('progressFill');
   var backBtn = document.getElementById('backBtn');
 
-  function showStep(idx, dir){
+  // Mostra a etapa `idx`. Importante: o `cur` só sai do fluxo (display:none)
+  // ANTES do `next` entrar (display:block) — nunca os dois ao mesmo tempo.
+  // Antes disso, tinha um instante em que os dois ficavam com display:block
+  // juntos, o container crescia pra caber os dois, e quando o `cur` sumia
+  // o layout "saltava" de volta — o bug do "desce, trava, sobe".
+  function showStep(idx){
     var cur = document.querySelector('.step.active');
     var next = steps[idx];
     if(cur === next) return;
-    if(cur){
-      cur.classList.add('leaving');
-      setTimeout(function(){ cur.classList.remove('active','leaving'); }, 260);
-    }
-    setTimeout(function(){
-      next.classList.add('active');
-      var firstInput = next.querySelector('.q-input');
-      if(firstInput && window.innerWidth > 640) setTimeout(function(){ firstInput.focus(); }, 260);
-    }, cur ? 40 : 0);
     current = idx;
     var pct = idx >= STEPS_WITH_PROGRESS ? 100 : Math.round((idx / STEPS_WITH_PROGRESS) * 100);
     progressFill.style.width = pct + '%';
     backBtn.classList.toggle('show', idx > 0 && idx < STEPS_WITH_PROGRESS);
-    window.scrollTo({top:0,behavior:'smooth'});
+
+    function entrarProximo(){
+      next.classList.add('active');
+      window.scrollTo({top:0,behavior:'smooth'});
+      var firstInput = next.querySelector('.q-input');
+      if(firstInput && window.innerWidth > 640) setTimeout(function(){ firstInput.focus(); }, 260);
+    }
+
+    if(cur){
+      cur.classList.add('leaving');
+      setTimeout(function(){
+        cur.classList.remove('active','leaving');
+        entrarProximo();
+      }, 260);
+    } else {
+      entrarProximo();
+    }
   }
 
   function voltar(){
@@ -626,5 +649,9 @@ main{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:56px 24px
   showStep(0);
 })();
 </script>
+
+<a href="https://wa.me/5534984276448" target="_blank" rel="noopener" class="wpp-float" aria-label="Falar com a Nettu's no WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2m0 1.67c2.24 0 4.35.87 5.93 2.46a8.23 8.23 0 0 1 2.42 5.85c0 4.56-3.71 8.27-8.28 8.27a8.3 8.3 0 0 1-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.26 8.26 0 0 1-1.26-4.4c0-4.57 3.72-8.32 8.18-8.32M8.53 7.4c-.16 0-.43.06-.66.31c-.22.25-.87.85-.87 2.07c0 1.22.89 2.4 1.01 2.56c.13.17 1.75 2.67 4.31 3.74c2.13.89 2.56.71 3.03.67c.46-.04 1.5-.61 1.71-1.2c.21-.59.21-1.09.15-1.2c-.07-.11-.24-.17-.5-.3c-.27-.13-1.58-.78-1.82-.87c-.25-.09-.43-.13-.6.14c-.19.26-.7.87-.86 1.05c-.16.19-.32.21-.58.07c-.27-.13-1.13-.42-2.15-1.33c-.79-.71-1.33-1.58-1.48-1.85c-.16-.26-.02-.4.11-.53c.12-.12.27-.32.4-.48c.14-.16.18-.27.28-.45c.09-.19.05-.35-.02-.49c-.07-.13-.6-1.49-.85-2.03c-.22-.5-.44-.48-.6-.48z"/></svg>
+</a>
 </body>
 </html>
