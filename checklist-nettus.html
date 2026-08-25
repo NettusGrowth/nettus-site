@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>7 Sinais de Que Sua Empresa Está Perdendo Receita · Nettu's</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Nunito:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#6E23D7;--purple-light:#8B4FDF;--purple-soft:#C5A7EF;
+  --ink:#0E0E0E;--cream:#F9F3E9;--night:#0C0913;--night-2:#15101F;
+  --card:#161220;--border:rgba(249,243,233,.10);--border-2:rgba(249,243,233,.06);
+  --txt:#EDE7DC;--txt-dim:rgba(237,231,220,.72);--txt-faint:rgba(237,231,220,.54);
+  --red:#E45B6B;--green:#3FBF7F;
+  --mono:'JetBrains Mono',monospace;--serif:'Fraunces',Georgia,serif;--sans:'Nunito',system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#3a3350;font-family:var(--sans);color:var(--txt);-webkit-font-smoothing:antialiased}
+
+.toolbar{position:sticky;top:0;z-index:50;background:rgba(12,9,19,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border-2);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.tb-brand{display:flex;align-items:center;gap:9px;color:var(--cream);text-decoration:none}
+.tb-brand svg{height:22px}
+.tb-brand span{font-weight:900;font-size:14.5px}
+.tb-print{background:var(--purple);color:#fff;font-weight:800;font-size:13.5px;padding:11px 20px;border:none;border-radius:30px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:background .15s,transform .15s}
+.tb-print:hover{background:var(--purple-light);transform:translateY(-1px)}
+
+.pages{max-width:800px;margin:36px auto 60px;display:flex;flex-direction:column;gap:28px;padding:0 16px}
+.pg{background:var(--night-2);border-radius:14px;box-shadow:0 30px 70px rgba(0,0,0,.4);padding:56px 52px;min-height:1000px;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.pg-foot{margin-top:auto;padding-top:40px;text-align:center}
+.pg-foot span{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--txt-faint)}
+
+/* capa */
+.cover{align-items:flex-start;justify-content:center;background:radial-gradient(ellipse 80% 60% at 30% 20%,rgba(110,35,215,.35),transparent 60%),var(--night-2)}
+.cover .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--purple-light);margin-bottom:22px}
+.cover h1{font-family:var(--serif);font-weight:500;font-size:44px;line-height:1.14;color:var(--cream);margin-bottom:20px;max-width:560px}
+.cover p{font-size:16px;color:var(--txt-dim);max-width:440px;line-height:1.6}
+.cover-logo{position:absolute;bottom:56px;left:52px;display:flex;align-items:center;gap:9px}
+.cover-logo svg{height:26px}
+.cover-logo span{font-weight:900;font-size:15px;color:var(--cream)}
+
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--purple-light)}
+.pg h2{font-family:var(--serif);font-weight:500;font-size:29px;color:var(--cream);line-height:1.22;margin:14px 0 22px}
+.pg p{font-size:15px;color:var(--txt-dim);line-height:1.68;margin-bottom:14px}
+.pg p strong{color:var(--cream);font-weight:700}
+.callout{background:var(--card);border:1px solid var(--border-2);border-radius:14px;padding:20px 24px;margin:18px 0;font-size:15px;color:var(--txt);font-weight:600}
+.callout strong{color:var(--purple-light)}
+
+.checkbox{border-radius:16px;padding:26px 30px;margin:22px 0}
+.checkbox-list{display:flex;flex-direction:column;gap:0}
+.ck-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px dashed var(--border);font-size:15px;color:var(--txt-dim)}
+.ck-row:last-child{border-bottom:none}
+.ck-row svg{flex-shrink:0;width:17px;height:17px}
+.red-box{background:rgba(228,91,107,.08);border:1px solid rgba(228,91,107,.25)}
+.red-box .ck-row svg{stroke:var(--red)}
+.cost-box{margin:18px 0}
+.cost-box h3{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--txt-faint);margin-bottom:10px}
+.cost-num{font-family:var(--serif);font-size:22px;color:var(--purple-light);font-weight:500}
+
+.mark-box{background:var(--card);border:1px solid var(--border-2);border-radius:14px;padding:22px 26px;margin:20px 0}
+.mark-box h3{font-family:var(--sans);font-weight:800;font-size:14px;color:var(--cream);margin-bottom:14px}
+.mark-item{display:flex;align-items:center;gap:12px;padding:9px 12px;background:var(--night-2);border-radius:10px;margin-bottom:8px;font-size:14px;color:var(--txt-dim);font-weight:600}
+.mark-item:last-child{margin-bottom:0}
+.mark-item .box{width:18px;height:18px;border:1.5px solid var(--border);border-radius:5px;flex-shrink:0}
+
+.action-box{margin:20px 0}
+.action-box h3{font-family:var(--sans);font-weight:800;font-size:14px;color:var(--cream);margin-bottom:14px}
+.action-item{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--card);border-radius:10px;margin-bottom:8px;font-size:14px;color:var(--txt-dim);font-weight:600}
+.action-item:last-child{margin-bottom:0}
+.action-item .dot{width:6px;height:6px;border-radius:50%;background:var(--purple-light);flex-shrink:0}
+
+.wpp-cta{text-align:center;background:linear-gradient(135deg,rgba(110,35,215,.14),var(--card));border:1px solid rgba(110,35,215,.3);border-radius:16px;padding:26px 30px;margin-top:auto}
+.wpp-cta h4{font-family:var(--sans);font-weight:800;font-size:14px;color:var(--cream);margin-bottom:10px}
+.wpp-cta p{font-size:13.5px;color:var(--txt-dim);margin-bottom:14px}
+.wpp-num{font-family:var(--mono);font-weight:700;font-size:17px;color:var(--purple-light)}
+.next-tease{font-style:italic;font-size:12.5px;color:var(--txt-faint);margin-top:14px;padding-top:14px;border-top:1px dashed var(--border)}
+
+.sinal-head{display:flex;align-items:baseline;gap:16px;margin-bottom:6px;flex-wrap:wrap}
+.sinal-tag{font-family:var(--serif);font-weight:600;font-size:30px;color:var(--cream)}
+.sinal-sub{font-size:13px;color:var(--txt-dim);line-height:1.4;text-transform:uppercase;letter-spacing:.02em;font-weight:700}
+
+/* pontuação final */
+.score-row{background:var(--card);border:1px solid var(--border-2);border-radius:14px;padding:20px 24px;margin-bottom:14px}
+.score-row .sr-top{display:flex;align-items:center;gap:14px;margin-bottom:10px}
+.score-range{font-family:var(--serif);font-weight:600;font-size:20px;color:var(--cream)}
+.score-num{font-family:var(--mono);font-size:12.5px;color:var(--purple-light);font-weight:700;background:rgba(110,35,215,.12);padding:5px 12px;border-radius:20px}
+.score-row p{font-size:13.5px;margin-bottom:0}
+
+@media(max-width:640px){
+  .pg{padding:36px 26px}
+  .cover h1{font-size:32px}
+  .cover-logo{position:static;margin-top:40px}
+}
+
+@media print{
+  body{background:#fff}
+  .toolbar{display:none}
+  .pages{max-width:none;margin:0;padding:0;gap:0}
+  .pg{box-shadow:none;border-radius:0;page-break-after:always;min-height:100vh;background:var(--night-2);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  @page{size:A4;margin:0}
+}
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <a href="index.html" class="tb-brand"><svg viewBox="358.0 228.3 588.5 588.5" xmlns="http://www.w3.org/2000/svg"><path d="M485.876 298.397C505.818 295.157 530.184 303.278 543.749 318.183C551.799 327.028 558.664 337.485 565.541 347.295L597.582 393.428C629.127 439.154 662.493 486.353 693.113 532.455L693.088 398.93L693.078 357.332C693.079 347.525 690.718 330.384 698.752 324.009C702.184 321.333 706.566 320.187 710.869 320.842C715.023 321.427 718.726 323.768 721.036 327.27C722.882 330.081 723.691 333.409 723.724 336.729C723.906 355.472 723.772 374.405 723.747 393.134L723.727 500.82L723.748 554.816C723.775 571.325 727.378 607.964 697.375 591.46C693.734 589.457 670.288 554.326 666.251 548.513L564.785 401.18L538.591 363.423C527.545 347.512 519.979 331.418 498.932 329.01C479.259 326.759 460.274 339.503 457.485 359.537C455.645 372.753 456.704 389.25 456.719 402.766L456.708 487.305L456.688 619.754L456.647 662.246C456.641 670.135 456.771 677.959 456.861 685.835C457.132 709.592 484.269 726.124 504.335 710.931C509.908 706.634 513.838 700.554 515.469 693.708C517.415 685.261 516.769 657.021 516.764 646.878L516.761 527.301C516.818 517.541 516.798 507.78 516.701 498.02C516.597 485.382 513.701 462.958 535.6 464.928C543.823 465.668 551.983 479.546 556.79 486.359L660.781 629.04L694.671 675.875C700.786 684.323 706.736 692.986 713.389 701.003C727.053 717.47 755.475 721.902 771.722 706.786C776.763 702.063 780.269 695.934 781.786 689.195C784.225 678.174 783.002 651.269 783.221 639.052C783.875 602.52 782.255 564.305 783.416 527.868C795.058 525.798 800.647 523.538 811.311 518.655C815.408 529.147 814.062 548.603 814.08 560.525L814.083 617.145L814.079 658.204C814.071 669.01 814.41 679.181 812.887 689.933C804.672 747.921 736.363 764.356 695.374 727.332C686.603 719.409 679.962 708.85 673.005 699.307L643.501 658.629L547.473 526.714L547.429 638.615C547.439 652.109 548.277 684.224 546.273 696.208C544.622 706.057 540.713 715.391 534.853 723.478C525.714 735.999 511.936 744.333 496.604 746.613C480.788 748.999 465.137 745.949 452.178 736.376C438.272 726.043 429.104 710.552 426.737 693.389C425.343 683.413 426.044 653.968 426.057 642.247L426.052 542.783L426.013 420.096L426.01 382.993C426.013 375.223 425.828 364.371 426.766 356.817C428.26 345.034 432.825 333.85 440.003 324.387C451.631 309.094 467.041 300.916 485.876 298.397Z" fill="#F9F3E9"/><path d="M809.777 298.445C823.32 297.453 841.688 302.85 851.151 311.441C914.241 368.727 857.967 472.37 790.842 498.932C784.594 501.404 782.387 502.577 775.877 501.907C764.391 496.562 765.715 487.043 774.809 479.936C777.818 477.584 781.037 475.076 783.967 472.625C787.554 469.586 790.931 466.307 794.073 462.81C798.211 458.228 817.541 434.247 807.347 426.085C806.295 425.243 798.448 423.768 796.398 423.325C786.587 421.203 777.366 416.237 769.745 409.743C757.325 399.229 749.598 384.205 748.271 367.986C745.285 330.227 772.545 301.073 809.777 298.445Z" fill="#8B4FDF"/></svg><span>Nettu's</span></a>
+  <button class="tb-print" onclick="window.print()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Baixar em PDF</button>
+</div>
+
+<div class="pages">
+
+  <!-- CAPA -->
+  <div class="pg cover">
+    <span class="eyebrow">Nettu's · Arquitetura de Receita</span>
+    <h1>7 sinais de que sua empresa está perdendo receita sem perceber</h1>
+    <p>Descubra em qual dos 7 estágios da jornada seu funil está travado, e quanto isso está custando por mês.</p>
+    <div class="cover-logo"><svg viewBox="358.0 228.3 588.5 588.5" xmlns="http://www.w3.org/2000/svg"><path d="M485.876 298.397C505.818 295.157 530.184 303.278 543.749 318.183C551.799 327.028 558.664 337.485 565.541 347.295L597.582 393.428C629.127 439.154 662.493 486.353 693.113 532.455L693.088 398.93L693.078 357.332C693.079 347.525 690.718 330.384 698.752 324.009C702.184 321.333 706.566 320.187 710.869 320.842C715.023 321.427 718.726 323.768 721.036 327.27C722.882 330.081 723.691 333.409 723.724 336.729C723.906 355.472 723.772 374.405 723.747 393.134L723.727 500.82L723.748 554.816C723.775 571.325 727.378 607.964 697.375 591.46C693.734 589.457 670.288 554.326 666.251 548.513L564.785 401.18L538.591 363.423C527.545 347.512 519.979 331.418 498.932 329.01C479.259 326.759 460.274 339.503 457.485 359.537C455.645 372.753 456.704 389.25 456.719 402.766L456.708 487.305L456.688 619.754L456.647 662.246C456.641 670.135 456.771 677.959 456.861 685.835C457.132 709.592 484.269 726.124 504.335 710.931C509.908 706.634 513.838 700.554 515.469 693.708C517.415 685.261 516.769 657.021 516.764 646.878L516.761 527.301C516.818 517.541 516.798 507.78 516.701 498.02C516.597 485.382 513.701 462.958 535.6 464.928C543.823 465.668 551.983 479.546 556.79 486.359L660.781 629.04L694.671 675.875C700.786 684.323 706.736 692.986 713.389 701.003C727.053 717.47 755.475 721.902 771.722 706.786C776.763 702.063 780.269 695.934 781.786 689.195C784.225 678.174 783.002 651.269 783.221 639.052C783.875 602.52 782.255 564.305 783.416 527.868C795.058 525.798 800.647 523.538 811.311 518.655C815.408 529.147 814.062 548.603 814.08 560.525L814.083 617.145L814.079 658.204C814.071 669.01 814.41 679.181 812.887 689.933C804.672 747.921 736.363 764.356 695.374 727.332C686.603 719.409 679.962 708.85 673.005 699.307L643.501 658.629L547.473 526.714L547.429 638.615C547.439 652.109 548.277 684.224 546.273 696.208C544.622 706.057 540.713 715.391 534.853 723.478C525.714 735.999 511.936 744.333 496.604 746.613C480.788 748.999 465.137 745.949 452.178 736.376C438.272 726.043 429.104 710.552 426.737 693.389C425.343 683.413 426.044 653.968 426.057 642.247L426.052 542.783L426.013 420.096L426.01 382.993C426.013 375.223 425.828 364.371 426.766 356.817C428.26 345.034 432.825 333.85 440.003 324.387C451.631 309.094 467.041 300.916 485.876 298.397Z" fill="#F9F3E9"/><path d="M809.777 298.445C823.32 297.453 841.688 302.85 851.151 311.441C914.241 368.727 857.967 472.37 790.842 498.932C784.594 501.404 782.387 502.577 775.877 501.907C764.391 496.562 765.715 487.043 774.809 479.936C777.818 477.584 781.037 475.076 783.967 472.625C787.554 469.586 790.931 466.307 794.073 462.81C798.211 458.228 817.541 434.247 807.347 426.085C806.295 425.243 798.448 423.768 796.398 423.325C786.587 421.203 777.366 416.237 769.745 409.743C757.325 399.229 749.598 384.205 748.271 367.986C745.285 330.227 772.545 301.073 809.777 298.445Z" fill="#8B4FDF"/></svg><span>NETTU'S</span></div>
+  </div>
+
+  <!-- INTRO -->
+  <div class="pg">
+    <span class="eyebrow">Por que isso acontece</span>
+    <h2>Por que empresas B2B perdem receita sem saber onde</h2>
+    <p>A maioria dos fundadores acha que sabe onde está o problema. "Falta lead", "preciso de mais vendedor", "o mercado está difícil"…</p>
+    <div class="callout"><strong>Mas a verdade costuma ser outra.</strong></div>
+    <p>Depois de mapear a jornada de dezenas de operações B2B, encontramos um padrão claro: os verdadeiros gargalos ficam escondidos entre os 7 estágios que todo cliente atravessa antes de virar receita, e ninguém olha pra lá porque está ocupado demais apagando incêndio.</p>
+    <p>São travas que custam R$ 30 a 80 mil por mês, silenciosamente.</p>
+    <p>Este checklist mostra os <strong>7 sinais de que a jornada do seu cliente está travada em algum ponto</strong>, e o que fazer a respeito de cada um.</p>
+    <div class="mark-box">
+      <h3>AO FINAL, VOCÊ VAI SABER:</h3>
+      <div class="mark-item"><span class="box"></span>Em qual dos 7 estágios sua receita está travando</div>
+      <div class="mark-item"><span class="box"></span>Quanto isso está custando por mês</div>
+      <div class="mark-item"><span class="box"></span>O que fazer pra destravar</div>
+    </div>
+    <div class="pg-foot"><span>Nettu's · Arquitetura de Receita</span></div>
+  </div>
+
+  <!-- SINAL 1 -->
+  <div class="pg">
+    <div class="sinal-head"><span class="sinal-tag">Sinal 1</span><span class="sinal-sub">Você não sabe seu CAC<br>(custo de aquisição de cliente)</span></div>
+    <p>Se alguém te perguntar "quanto você gasta para conquistar um cliente?", você responde em 10 segundos?</p>
+    <p>Se a resposta é <strong>não</strong>, você está operando o estágio de Aquisição às cegas.</p>
+    <div class="checkbox red-box checkbox-list">
+      <div class="ck-row"><span>Saber se seu negócio é lucrativo de verdade</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+      <div class="ck-row"><span>Decidir onde investir (mídia ou comercial)</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+      <div class="ck-row"><span>Calcular quanto pode gastar em anúncios</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+      <div class="ck-row"><span>Escalar sem quebrar a operação</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+    </div>
+    <div class="cost-box"><h3>O CUSTO REAL DISSO</h3><p>Empresas que não sabem o CAC gastam, em média, 40% a mais do que deveriam em aquisição. Se você fatura R$ 100 mil por mês, isso significa <span class="cost-num">R$ 40 mil desperdiçados por mês</span> (R$ 480 mil por ano).</p></div>
+    <div class="mark-box"><h3>MARQUE SE ESSE É VOCÊ</h3>
+      <div class="mark-item"><span class="box"></span>Não sei meu CAC exato</div>
+      <div class="mark-item"><span class="box"></span>Já calculei uma vez, mas não acompanho</div>
+      <div class="mark-item"><span class="box"></span>Nunca parei pra pensar nisso</div>
+    </div>
+    <div class="action-box"><h3>O QUE FAZER</h3>
+      <div class="action-item"><span class="dot"></span>CAC = (investimento em mídia + comercial) / clientes novos</div>
+      <div class="action-item"><span class="dot"></span>Calcule todo mês, sem exceção</div>
+    </div>
+    <div class="wpp-cta">
+      <h4>MARCOU ESSE SINAL?</h4>
+      <p>Manda um print dessa página no nosso WhatsApp e te ajudamos a calcular seu CAC de verdade.</p>
+      <div class="wpp-num">34 98427-6448</div>
+      <div class="next-tease">Continua lendo. Os próximos 2 sinais custam ainda mais caro.</div>
+    </div>
+  </div>
+
+  <!-- SINAL 2 -->
+  <div class="pg">
+    <div class="sinal-head"><span class="sinal-tag">Sinal 2</span><span class="sinal-sub">Vendas dependem 100%<br>de você (fundador)</span></div>
+    <p>Se você tira férias, as vendas param? Se fica doente, a empresa trava?</p>
+    <p>Isso não é uma empresa. <strong>É um emprego</strong>, e provavelmente mal remunerado.</p>
+    <div class="cost-box"><h3>O CUSTO REAL DISSO</h3><p>Você está preso no operacional e não consegue trabalhar NO negócio, contratar vendedor, escalar a operação nem ter vida pessoal. Custo de oportunidade: <span class="cost-num">incalculável.</span> Sua empresa vale bem menos do que deveria.</p></div>
+    <div class="mark-box"><h3>MARQUE SE ESSE É VOCÊ</h3>
+      <div class="mark-item"><span class="box"></span>Eu fecho 80%+ das vendas sozinho</div>
+      <div class="mark-item"><span class="box"></span>Tentei contratar vendedor e não deu certo</div>
+      <div class="mark-item"><span class="box"></span>Minha equipe não performa sem mim</div>
+      <div class="mark-item"><span class="box"></span>Já recusei proposta boa por falta de gente pra tocar</div>
+    </div>
+    <div class="action-box"><h3>O QUE FAZER</h3>
+      <div class="action-item"><span class="dot"></span>Script/playbook que qualquer um consiga seguir</div>
+      <div class="action-item"><span class="dot"></span>Treinamento estruturado do time comercial</div>
+      <div class="action-item"><span class="dot"></span>Sistema de cobrança de meta, sem depender de feeling</div>
+    </div>
+    <div class="wpp-cta">
+      <h4>ESSE SINAL DOEU?</h4>
+      <p>A maioria dos fundadores que atendemos está presa nesse mesmo ponto da jornada. Manda "OPERACIONAL" no WhatsApp e mostramos como sair dessa.</p>
+      <div class="wpp-num">34 98427-6448</div>
+      <div class="next-tease">Atenção: o próximo sinal (#3) é responsável pela maior parte das empresas que não crescem.</div>
+    </div>
+  </div>
+
+  <!-- SINAL 3 -->
+  <div class="pg">
+    <div class="sinal-head"><span class="sinal-tag">Sinal 3</span><span class="sinal-sub">Você tem leads, mas a<br>conversão é baixa (menos de 20%)</span></div>
+    <p>O estágio de Aquisição está fazendo a parte dele. Os leads chegam. Mas aí demoram pra responder, a qualificação é fraca, o follow-up é inexistente e o lead esfria antes de fechar.</p>
+    <div class="cost-box"><h3>O CUSTO REAL DISSO</h3><p>Se você recebe 100 leads por mês e converte 10% (10 vendas de R$ 3.000, receita de R$ 30 mil), convertendo 30% (padrão de mercado) seriam 30 vendas, R$ 90 mil. Você está <span class="cost-num">perdendo R$ 60 mil por mês</span> só por falta de processo entre os estágios de Consideração e Decisão. R$ 720 mil por ano.</p></div>
+    <div class="mark-box"><h3>MARQUE SE ESSE É VOCÊ</h3>
+      <div class="mark-item"><span class="box"></span>Conversão abaixo de 20%</div>
+      <div class="mark-item"><span class="box"></span>Leads esfriam antes de fechar</div>
+      <div class="mark-item"><span class="box"></span>Não temos follow-up estruturado</div>
+      <div class="mark-item"><span class="box"></span>Vendedores esquecem de leads</div>
+    </div>
+    <div class="action-box"><h3>O QUE FAZER</h3>
+      <div class="action-item"><span class="dot"></span>Tempo de resposta abaixo de 5 minutos</div>
+      <div class="action-item"><span class="dot"></span>Régua de follow-up automática (7 a 12 toques)</div>
+      <div class="action-item"><span class="dot"></span>Qualificação estruturada (perfil, orçamento, urgência)</div>
+      <div class="action-item"><span class="dot"></span>CRM atualizado todo dia</div>
+    </div>
+    <div class="wpp-cta">
+      <h4>ESSE AQUI É O MAIS COMUM</h4>
+      <p>9 em cada 10 empresas que nos procuram têm esse gargalo. Manda "CONVERSÃO" no WhatsApp pra uma análise rápida e gratuita (10 min).</p>
+      <div class="wpp-num">34 98427-6448</div>
+      <div class="next-tease">Já marcou 3 sinais? Espera até ver o #4. É o que mais gera frustração nos fundadores.</div>
+    </div>
+  </div>
+
+  <!-- SINAL 4 -->
+  <div class="pg">
+    <div class="sinal-head"><span class="sinal-tag">Sinal 4</span><span class="sinal-sub">Você não sabe em qual estágio<br>da jornada cada lead está parado</span></div>
+    <p>Planilha de Excel? Post-it na parede? "Tá tudo na minha cabeça"?</p>
+    <div class="callout">Sem visibilidade por estágio = sem dado = sem decisão inteligente.</div>
+    <div class="cost-box"><h3>O CUSTO REAL DISSO</h3><p>Sem enxergar em qual dos 7 estágios cada lead está parado, você perde 30 a 40% dos leads no esquecimento, gasta 8 a 12 horas por semana procurando informação e não tem previsibilidade nenhuma. Custo médio: <span class="cost-num">R$ 35 mil por mês</span> em oportunidade perdida.</p></div>
+    <div class="mark-box"><h3>MARQUE SE ESSE É VOCÊ</h3>
+      <div class="mark-item"><span class="box"></span>Não temos CRM</div>
+      <div class="mark-item"><span class="box"></span>Temos, mas ninguém usa direito</div>
+      <div class="mark-item"><span class="box"></span>Usamos planilha ou Excel</div>
+      <div class="mark-item"><span class="box"></span>Informação espalhada (WhatsApp, e-mail, papel)</div>
+    </div>
+    <div class="action-box"><h3>O QUE FAZER</h3>
+      <div class="action-item"><span class="dot"></span>Escolha um CRM simples e use de verdade</div>
+      <div class="action-item"><span class="dot"></span>Mapeie os 7 estágios da jornada dentro dele</div>
+      <div class="action-item"><span class="dot"></span>Regra de ouro: atualizar todo dia, 5 minutos</div>
+    </div>
+    <div class="wpp-cta">
+      <h4>CONFUSO SOBRE COMO ESTRUTURAR ISSO?</h4>
+      <p>Segue @nettus_growth no Instagram, postamos conteúdo semanal sobre CRM, funil e arquitetura de receita.</p>
+      <div class="next-tease">Calma, ainda faltam 3 sinais, e tem um que quase ninguém percebe.</div>
+    </div>
+  </div>
+
+  <!-- SINAL 5 -->
+  <div class="pg">
+    <div class="sinal-head"><span class="sinal-tag">Sinal 5</span><span class="sinal-sub">Você não consegue prever<br>faturamento dos próximos 90 dias</span></div>
+    <p>Se alguém te perguntar "quanto você vai faturar nos próximos 3 meses?", você chuta ou sabe?</p>
+    <p>Empresas com arquitetura de receita estruturada preveem com 75 a 85% de acurácia. Você? Provavelmente 0%.</p>
+    <div class="checkbox red-box checkbox-list">
+      <div class="ck-row"><span>Não sabe se pode contratar</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+      <div class="ck-row"><span>Não sabe se pode investir</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+      <div class="ck-row"><span>Vive no escuro sobre o futuro</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+      <div class="ck-row"><span>Ansiedade constante com o caixa</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+    </div>
+    <div class="mark-box"><h3>MARQUE</h3><div class="mark-item"><span class="box"></span>Não consigo prever faturamento</div></div>
+    <div class="callout">Curiosidade: empresas que preveem faturamento crescem de 3 a 5 vezes mais rápido. Porque decidem com dado, não com esperança.</div>
+    <div class="pg-foot"><span>Nettu's · Arquitetura de Receita</span></div>
+  </div>
+
+  <!-- SINAL 6 -->
+  <div class="pg">
+    <div class="sinal-head"><span class="sinal-tag">Sinal 6</span><span class="sinal-sub">Time comercial não bate<br>meta há 3+ meses</span></div>
+    <p>Meta é só um número bonito na parede, ou uma previsão realista baseada em dado?</p>
+    <p>Se o seu time não bate meta consistentemente, o problema raramente é o time. <strong>É o sistema.</strong></p>
+    <div class="checkbox red-box checkbox-list">
+      <div class="ck-row"><span>Meta foi batida só 1 ou 2 vezes no último ano</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+      <div class="ck-row"><span>Cada mês é uma surpresa</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+      <div class="ck-row"><span>Time está desmotivado</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+      <div class="ck-row"><span>Alta rotatividade de vendedores</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+    </div>
+    <div class="mark-box"><h3>MARQUE</h3><div class="mark-item"><span class="box"></span>Não batemos meta consistentemente</div></div>
+    <div class="wpp-cta">
+      <h4>MARCOU 4+ SINAIS ATÉ AGORA?</h4>
+      <p>Você provavelmente está perdendo mais de R$ 50 mil por mês. Não é culpa do time. É falta de arquitetura. Manda "DIAGNÓSTICO" no WhatsApp e agendamos uma análise gratuita de 90 minutos.</p>
+      <div class="wpp-num">34 98427-6448</div>
+      <div class="next-tease">Último sinal na próxima página. É o mais perigoso de todos.</div>
+    </div>
+  </div>
+
+  <!-- SINAL 7 -->
+  <div class="pg">
+    <div class="sinal-head"><span class="sinal-tag">Sinal 7</span><span class="sinal-sub">Faturamento oscila +30% ou<br>-30% sem padrão nenhum</span></div>
+    <p>Janeiro: R$ 80 mil. Fevereiro: R$ 150 mil. Março: R$ 60 mil. Abril: R$ 120 mil.</p>
+    <p><strong>Montanha-russa emocional, mais impossibilidade de planejar qualquer coisa.</strong></p>
+    <div class="checkbox red-box checkbox-list">
+      <div class="ck-row"><span>Sem pipeline previsível</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+      <div class="ck-row"><span>Vendas por impulso, não por processo</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+      <div class="ck-row"><span>Sem processo replicável entre os estágios</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+      <div class="ck-row"><span>Cliente compra quando quer, não quando você precisa</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+    </div>
+    <div class="mark-box"><h3>MARQUE</h3><div class="mark-item"><span class="box"></span>Meu faturamento é imprevisível</div></div>
+    <div class="pg-foot"><span>Nettu's · Arquitetura de Receita</span></div>
+  </div>
+
+  <!-- RESULTADO / SCORE -->
+  <div class="pg">
+    <span class="eyebrow">Seu resultado</span>
+    <h2>Quantos sinais você marcou?</h2>
+
+    <div class="score-row">
+      <div class="sr-top"><span class="score-range">0-1 sinais</span><span class="score-num">34 98427-6448</span></div>
+      <p>Parabéns, você está acima da média. Ainda assim, um diagnóstico completo pode revelar 20 a 30% de crescimento oculto. Manda "0 SINAIS" no WhatsApp pra dicas de otimização avançada.</p>
+    </div>
+    <div class="score-row">
+      <div class="sr-top"><span class="score-range">2-3 sinais</span><span class="score-num">34 98427-6448</span></div>
+      <p><strong>Atenção:</strong> você está perdendo R$ 30 a 50 mil por mês. É urgente estruturar antes que piore. Agende o diagnóstico gratuito abaixo.</p>
+    </div>
+    <div class="score-row">
+      <div class="sr-top"><span class="score-range">4-5 sinais</span><span class="score-num">34 98427-6448</span></div>
+      <p><strong>Crítico:</strong> você está perdendo R$ 60 a 100 mil por mês. Sua empresa está crescendo bem menos do que poderia. Urgente, agende o diagnóstico hoje.</p>
+    </div>
+    <div class="score-row">
+      <div class="sr-top"><span class="score-range">6-7 sinais</span><span class="score-num">34 98427-6448</span></div>
+      <p><strong>Emergência comercial.</strong> Você não está sozinho: 40% das empresas que nos procuram estão nessa situação, e todas reverteram o quadro em 30 a 90 dias. WhatsApp agora, manda "EMERGÊNCIA" e priorizamos seu atendimento.</p>
+    </div>
+
+    <div class="wpp-cta" style="margin-top:24px;">
+      <h4>PRONTO PRA DESTRAVAR SUA RECEITA?</h4>
+      <p>Agende sua Reunião Estratégica gratuita e receba o diagnóstico completo dos 7 estágios da sua jornada.</p>
+      <div class="wpp-num">34 98427-6448</div>
+    </div>
+    <div class="pg-foot"><span>© Nettu's · Arquitetura de Receita · nettus.com.br</span></div>
+  </div>
+
+</div>
+</body>
+</html>

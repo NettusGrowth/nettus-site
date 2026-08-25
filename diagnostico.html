@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Diagnóstico de Receita · Nettu's</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Nunito:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#6E23D7;--purple-light:#8B4FDF;--purple-soft:#C5A7EF;--purple-deep:#37116B;
+  --ink:#0E0E0E;--cream:#F9F3E9;--night:#0C0913;--night-2:#15101F;--white:#FFFFFF;
+  --card:#161220;--card-2:#1B1626;--border:rgba(249,243,233,.10);--border-2:rgba(249,243,233,.06);
+  --txt:#EDE7DC;--txt-dim:rgba(237,231,220,.72);--txt-faint:rgba(237,231,220,.54);
+  --green:#3FBF7F;--red:#E45B6B;
+  --mono:'JetBrains Mono',monospace;--serif:'Fraunces',Georgia,serif;--sans:'Nunito',system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--night);color:var(--txt);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh;min-height:100dvh}
+
+/* fundo com grid + glow, igual identidade do site */
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(var(--border-2) 1px,transparent 1px),linear-gradient(90deg,var(--border-2) 1px,transparent 1px);
+  background-size:64px 64px;opacity:.5;mask-image:radial-gradient(ellipse 70% 55% at 50% 20%,#000 30%,transparent 80%)}
+.glow{position:fixed;top:-160px;left:50%;transform:translateX(-50%);width:820px;height:620px;border-radius:50%;
+  background:radial-gradient(circle,rgba(110,35,215,.28),transparent 62%);filter:blur(60px);z-index:0;pointer-events:none}
+
+/* topo fixo: logo + barra de progresso */
+.top-bar{position:sticky;top:0;z-index:20;background:rgba(12,9,19,.78);backdrop-filter:blur(14px);border-bottom:1px solid var(--border-2)}
+.top-inner{max-width:640px;margin:0 auto;padding:16px 24px 14px;display:flex;flex-direction:column;gap:12px}
+.top-row{display:flex;align-items:center;justify-content:space-between}
+.brand-mini{display:flex;align-items:center;gap:8px}
+.brand-mini svg{height:22px;width:auto}
+.brand-mini span{font-weight:900;font-size:14.5px;color:var(--cream)}
+.back-btn{background:none;border:none;color:var(--txt-faint);font-family:var(--sans);font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;padding:6px 4px;transition:color .15s;visibility:hidden}
+.back-btn.show{visibility:visible}
+.back-btn:hover{color:var(--cream)}
+.progress-track{height:4px;border-radius:99px;background:var(--border);overflow:hidden}
+.progress-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--purple),var(--purple-light));width:0%;transition:width .5s cubic-bezier(.4,0,.2,1)}
+
+/* palco central */
+main{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:56px 24px 80px;min-height:calc(100vh - 78px);min-height:calc(100dvh - 78px);display:flex;flex-direction:column;justify-content:center}
+
+.step{display:none}
+.step.active{display:block;animation:stepIn .5s cubic-bezier(.16,1,.3,1) both}
+@keyframes stepIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes stepOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-14px)}}
+.step.leaving{animation:stepOut .28s ease both}
+
+.q-eyebrow{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--purple-light);margin-bottom:14px;display:block}
+.q-title{font-family:var(--serif);font-weight:500;font-size:clamp(24px,4.4vw,34px);line-height:1.22;letter-spacing:-.015em;color:var(--cream);margin-bottom:8px}
+.q-sub{font-size:14.5px;color:var(--txt-dim);margin-bottom:30px;line-height:1.6}
+
+/* opções de escolha (single-select) */
+.opt-list{display:flex;flex-direction:column;gap:10px;margin-bottom:8px}
+.opt{background:var(--card);border:1.5px solid var(--border-2);border-radius:14px;padding:17px 20px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:border-color .18s,background .18s,transform .12s;text-align:left;font-family:var(--sans);color:var(--txt);font-size:15px;font-weight:600}
+.opt:hover{border-color:rgba(110,35,215,.45);background:var(--card-2)}
+.opt:active{transform:scale(.985)}
+.opt.checked{border-color:var(--purple);background:linear-gradient(135deg,rgba(110,35,215,.16),var(--card-2))}
+.opt-box{width:22px;height:22px;border-radius:7px;border:1.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:border-color .18s,background .18s}
+.opt.checked .opt-box{border-color:var(--purple);background:var(--purple)}
+.opt-box svg{width:13px;height:13px;stroke:var(--cream);stroke-width:3;fill:none;opacity:0;transform:scale(.5);transition:opacity .15s,transform .15s}
+.opt.checked .opt-box svg{opacity:1;transform:scale(1)}
+.opt-txt{flex:1}
+
+/* inputs de texto */
+.field-wrap{margin-bottom:10px}
+.q-input{width:100%;background:var(--card);border:1.5px solid var(--border-2);border-radius:14px;padding:18px 20px;font-family:var(--sans);font-size:17px;font-weight:600;color:var(--cream);outline:none;transition:border-color .18s,background .18s}
+.q-input::placeholder{color:var(--txt-faint);font-weight:500}
+.q-input:focus{border-color:var(--purple);background:var(--card-2)}
+.field-err{color:var(--red);font-size:12.5px;font-weight:700;margin-top:9px;display:none;align-items:center;gap:6px}
+.field-err.show{display:flex}
+
+.next-btn{margin-top:26px;width:100%;background:var(--purple);color:var(--white);font-family:var(--sans);font-weight:800;font-size:15.5px;padding:17px 24px;border:none;border-radius:34px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:9px;transition:background .18s,transform .15s,box-shadow .18s;letter-spacing:.01em}
+.next-btn:hover{background:var(--purple-light);transform:translateY(-2px);box-shadow:0 14px 34px rgba(110,35,215,.35)}
+.next-btn:active{transform:translateY(0)}
+.next-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+.next-hint{text-align:center;font-family:var(--mono);font-size:11px;color:var(--txt-faint);margin-top:14px;letter-spacing:.04em}
+
+/* dropdown de segmento (pesquisável) */
+.seg-select{position:relative}
+.seg-trigger{width:100%;background:var(--card);border:1.5px solid var(--border-2);border-radius:14px;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:border-color .18s}
+.seg-trigger.open,.seg-trigger:hover{border-color:rgba(110,35,215,.45)}
+.seg-trigger span{font-size:16px;font-weight:600;color:var(--txt-faint)}
+.seg-trigger.filled span{color:var(--cream)}
+.seg-trigger svg{width:16px;height:16px;stroke:var(--txt-faint);stroke-width:2;fill:none;transition:transform .2s}
+.seg-trigger.open svg{transform:rotate(180deg)}
+.seg-panel{position:absolute;left:0;right:0;top:calc(100% + 8px);background:var(--card-2);border:1.5px solid var(--border);border-radius:14px;padding:8px;max-height:280px;overflow-y:auto;z-index:5;box-shadow:0 20px 50px rgba(0,0,0,.45);display:none}
+.seg-panel.open{display:block;animation:panelIn .18s ease both}
+@keyframes panelIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.seg-search{width:100%;background:var(--night-2);border:1px solid var(--border-2);border-radius:9px;padding:11px 13px;font-family:var(--sans);font-size:14px;color:var(--cream);outline:none;margin-bottom:6px}
+.seg-search::placeholder{color:var(--txt-faint)}
+.seg-opt{padding:11px 13px;border-radius:9px;font-size:14.5px;font-weight:600;color:var(--txt);cursor:pointer;transition:background .12s}
+.seg-opt:hover,.seg-opt.hi{background:rgba(110,35,215,.16)}
+.seg-empty{padding:12px 13px;font-size:13px;color:var(--txt-faint)}
+
+/* dados de contato (etapa final) */
+.contact-field{position:relative;margin-bottom:12px}
+.contact-field svg{position:absolute;left:18px;top:50%;transform:translateY(-50%);width:18px;height:18px;stroke:var(--txt-faint);stroke-width:2;fill:none;pointer-events:none}
+.contact-field input{padding-left:50px}
+
+/* tela de sucesso */
+.success-wrap{text-align:center}
+.success-ico{width:74px;height:74px;border-radius:50%;background:rgba(63,191,127,.14);border:1.5px solid rgba(63,191,127,.35);margin:0 auto 26px;display:flex;align-items:center;justify-content:center;animation:pop .5s cubic-bezier(.16,1,.3,1) both}
+@keyframes pop{0%{transform:scale(.4);opacity:0}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+.success-ico svg{width:34px;height:34px;stroke:var(--green);stroke-width:2.5;fill:none}
+.success-wrap h1{font-family:var(--serif);font-weight:500;font-size:clamp(26px,4.6vw,36px);color:var(--cream);margin-bottom:14px;line-height:1.2}
+.success-wrap>p{font-size:15px;color:var(--txt-dim);max-width:440px;margin:0 auto 30px;line-height:1.65}
+.urgent-box{background:linear-gradient(135deg,rgba(110,35,215,.14),var(--card-2));border:1px solid rgba(110,35,215,.3);border-radius:18px;padding:22px;margin-bottom:30px}
+.urgent-box .u-lbl{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--purple-light);margin-bottom:10px;font-weight:700}
+.wpp-btn{background:var(--green);color:var(--white);font-weight:800;font-size:15px;padding:15px 26px;border-radius:30px;text-decoration:none;display:inline-flex;align-items:center;gap:9px;transition:transform .15s,box-shadow .15s;margin-top:6px}
+.wpp-btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(63,191,127,.3)}
+.wpp-note{font-size:11.5px;color:var(--txt-faint);margin-top:9px}
+
+.deliv-box{text-align:left;background:var(--card);border:1px solid var(--border-2);border-radius:18px;padding:26px 28px;margin-bottom:22px}
+.deliv-box h3{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--txt-faint);margin-bottom:16px}
+.deliv-item{display:flex;align-items:flex-start;gap:11px;margin-bottom:13px;font-size:14px;color:var(--txt);line-height:1.5}
+.deliv-item:last-child{margin-bottom:0}
+.deliv-item svg{width:16px;height:16px;stroke:var(--green);stroke-width:2.5;fill:none;flex-shrink:0;margin-top:2px}
+.deliv-item strong{color:var(--cream)}
+.deliv-value{border-top:1px solid var(--border-2);margin-top:16px;padding-top:16px;text-align:center}
+.deliv-old{font-family:var(--mono);font-size:13px;color:var(--txt-faint);text-decoration:line-through;margin-bottom:4px}
+.deliv-new{font-family:var(--serif);font-size:20px;color:var(--green);font-weight:500}
+
+.dl-card{background:var(--card);border:1px solid var(--border-2);border-radius:18px;padding:24px;margin-bottom:22px;text-align:left}
+.dl-card h3{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--txt-faint);margin-bottom:8px}
+.dl-card p{font-size:13.5px;color:var(--txt-dim);margin-bottom:16px;line-height:1.55}
+.dl-btn{width:100%;background:var(--purple);color:var(--white);font-weight:800;font-size:14px;padding:15px 20px;border-radius:14px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:9px;transition:background .18s,transform .15s}
+.dl-btn:hover{background:var(--purple-light);transform:translateY(-1px)}
+
+.next-steps{text-align:left;margin-bottom:8px}
+.next-steps h3{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--txt-faint);margin-bottom:16px;text-align:center}
+.ns-item{display:flex;gap:14px;margin-bottom:16px}
+.ns-num{width:26px;height:26px;border-radius:50%;background:rgba(110,35,215,.16);border:1px solid rgba(110,35,215,.3);color:var(--purple-light);font-family:var(--mono);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ns-item p{font-size:13.5px;color:var(--txt-dim);line-height:1.55;padding-top:3px}
+
+.foot-note{text-align:center;font-size:12.5px;color:var(--txt-faint);margin-top:30px;line-height:1.6}
+.foot-note b{color:var(--txt-dim)}
+
+@media(max-width:520px){
+  main{padding:40px 18px 60px}
+  .opt{padding:15px 17px}
+  .q-input{padding:16px 18px;font-size:16px}
+}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="glow"></div>
+
+<div class="top-bar">
+  <div class="top-inner">
+    <div class="top-row">
+      <a href="index.html" class="brand-mini"><svg viewBox="358.0 228.3 588.5 588.5" xmlns="http://www.w3.org/2000/svg"><path d="M485.876 298.397C505.818 295.157 530.184 303.278 543.749 318.183C551.799 327.028 558.664 337.485 565.541 347.295L597.582 393.428C629.127 439.154 662.493 486.353 693.113 532.455L693.088 398.93L693.078 357.332C693.079 347.525 690.718 330.384 698.752 324.009C702.184 321.333 706.566 320.187 710.869 320.842C715.023 321.427 718.726 323.768 721.036 327.27C722.882 330.081 723.691 333.409 723.724 336.729C723.906 355.472 723.772 374.405 723.747 393.134L723.727 500.82L723.748 554.816C723.775 571.325 727.378 607.964 697.375 591.46C693.734 589.457 670.288 554.326 666.251 548.513L564.785 401.18L538.591 363.423C527.545 347.512 519.979 331.418 498.932 329.01C479.259 326.759 460.274 339.503 457.485 359.537C455.645 372.753 456.704 389.25 456.719 402.766L456.708 487.305L456.688 619.754L456.647 662.246C456.641 670.135 456.771 677.959 456.861 685.835C457.132 709.592 484.269 726.124 504.335 710.931C509.908 706.634 513.838 700.554 515.469 693.708C517.415 685.261 516.769 657.021 516.764 646.878L516.761 527.301C516.818 517.541 516.798 507.78 516.701 498.02C516.597 485.382 513.701 462.958 535.6 464.928C543.823 465.668 551.983 479.546 556.79 486.359L660.781 629.04L694.671 675.875C700.786 684.323 706.736 692.986 713.389 701.003C727.053 717.47 755.475 721.902 771.722 706.786C776.763 702.063 780.269 695.934 781.786 689.195C784.225 678.174 783.002 651.269 783.221 639.052C783.875 602.52 782.255 564.305 783.416 527.868C795.058 525.798 800.647 523.538 811.311 518.655C815.408 529.147 814.062 548.603 814.08 560.525L814.083 617.145L814.079 658.204C814.071 669.01 814.41 679.181 812.887 689.933C804.672 747.921 736.363 764.356 695.374 727.332C686.603 719.409 679.962 708.85 673.005 699.307L643.501 658.629L547.473 526.714L547.429 638.615C547.439 652.109 548.277 684.224 546.273 696.208C544.622 706.057 540.713 715.391 534.853 723.478C525.714 735.999 511.936 744.333 496.604 746.613C480.788 748.999 465.137 745.949 452.178 736.376C438.272 726.043 429.104 710.552 426.737 693.389C425.343 683.413 426.044 653.968 426.057 642.247L426.052 542.783L426.013 420.096L426.01 382.993C426.013 375.223 425.828 364.371 426.766 356.817C428.26 345.034 432.825 333.85 440.003 324.387C451.631 309.094 467.041 300.916 485.876 298.397Z" fill="#F9F3E9"/><path d="M809.777 298.445C823.32 297.453 841.688 302.85 851.151 311.441C914.241 368.727 857.967 472.37 790.842 498.932C784.594 501.404 782.387 502.577 775.877 501.907C764.391 496.562 765.715 487.043 774.809 479.936C777.818 477.584 781.037 475.076 783.967 472.625C787.554 469.586 790.931 466.307 794.073 462.81C798.211 458.228 817.541 434.247 807.347 426.085C806.295 425.243 798.448 423.768 796.398 423.325C786.587 421.203 777.366 416.237 769.745 409.743C757.325 399.229 749.598 384.205 748.271 367.986C745.285 330.227 772.545 301.073 809.777 298.445Z" fill="#8B4FDF"/></svg><span>Nettu's</span></a>
+      <button class="back-btn" id="backBtn" type="button" onclick="voltar()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Voltar</button>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+</div>
+
+<main>
+  <form id="quizForm" novalidate>
+
+    <!-- 1: função -->
+    <div class="step active" data-step="0">
+      <span class="q-eyebrow">Diagnóstico de receita · 1 min</span>
+      <h1 class="q-title">Primeiro, qual é a sua função na empresa?</h1>
+      <div class="opt-list" data-field="funcao" data-required="true">
+        <button type="button" class="opt" data-value="Fundador(a) ou CEO"><span class="opt-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="opt-txt">Fundador(a) ou CEO</span></button>
+        <button type="button" class="opt" data-value="Sócio(a)"><span class="opt-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="opt-txt">Sócio(a)</span></button>
+        <button type="button" class="opt" data-value="Diretor(a) Comercial/Vendas"><span class="opt-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="opt-txt">Diretor(a) Comercial/Vendas</span></button>
+        <button type="button" class="opt" data-value="Gerente Comercial"><span class="opt-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="opt-txt">Gerente Comercial</span></button>
+        <button type="button" class="opt" data-value="Analista/Coordenador"><span class="opt-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="opt-txt">Analista/Coordenador</span></button>
+        <button type="button" class="opt" data-value="Outro cargo"><span class="opt-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="opt-txt">Outro cargo</span></button>
+      </div>
+    </div>
+
+    <!-- 2: nome -->
+    <div class="step" data-step="1">
+      <span class="q-eyebrow">Diagnóstico de receita</span>
+      <h1 class="q-title">Qual é o seu nome?</h1>
+      <div class="field-wrap">
+        <input type="text" class="q-input" id="f-nome" data-field="nome" data-required="true" placeholder="Digite seu nome" autocomplete="name">
+        <div class="field-err" id="err-nome"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Digite seu nome para continuar</div>
+      </div>
+      <button type="button" class="next-btn" onclick="avancar()">Prosseguir →</button>
+      <div class="next-hint">aperte Enter</div>
+    </div>
+
+    <!-- 3: whatsapp -->
+    <div class="step" data-step="2">
+      <span class="q-eyebrow">Diagnóstico de receita</span>
+      <h1 class="q-title">Qual é o seu WhatsApp?</h1>
+      <p class="q-sub">É por lá que vamos confirmar sua Reunião Estratégica.</p>
+      <div class="field-wrap">
+        <input type="tel" class="q-input" id="f-whatsapp" data-field="whatsapp" data-required="true" placeholder="(00) 00000-0000" inputmode="numeric" autocomplete="tel">
+        <div class="field-err" id="err-whatsapp"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Digite um WhatsApp válido com DDD</div>
+      </div>
+      <button type="button" class="next-btn" onclick="avancar()">Prosseguir →</button>
+      <div class="next-hint">aperte Enter</div>
+    </div>
+
+    <!-- 4: gargalo -->
+    <div class="step" data-step="3">
+      <span class="q-eyebrow">Diagnóstico de receita</span>
+      <h1 class="q-title">Qual é o PRINCIPAL gargalo que está limitando a receita da sua empresa hoje?</h1>
+      <div class="opt-list" data-field="gargalo" data-required="true">
+        <button type="button" class="opt" data-value="Não tenho volume suficiente de oportunidades"><span class="opt-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="opt-txt">Não tenho volume suficiente de oportunidades</span></button>
+        <button type="button" class="opt" data-value="Tenho leads, mas a conversão é baixa"><span class="opt-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="opt-txt">Tenho leads, mas a conversão é baixa</span></button>
+        <button type="button" class="opt" data-value="Vendas dependem 100% de mim (fundador)"><span class="opt-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="opt-txt">Vendas dependem 100% de mim (fundador)</span></button>
+        <button type="button" class="opt" data-value="Time comercial não performa consistentemente"><span class="opt-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="opt-txt">Time comercial não performa consistentemente</span></button>
+        <button type="button" class="opt" data-value="Não sei meus números reais de vendas"><span class="opt-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="opt-txt">Não sei meus números reais de vendas</span></button>
+        <button type="button" class="opt" data-value="Tenho todos esses problemas"><span class="opt-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="opt-txt">Tenho todos esses problemas</span></button>
+      </div>
+    </div>
+
+    <!-- 5: faturamento -->
+    <div class="step" data-step="4">
+      <span class="q-eyebrow">Diagnóstico de receita</span>
+      <h1 class="q-title">Qual é o faturamento MENSAL aproximado da sua empresa?</h1>
+      <div class="opt-list" data-field="faturamento" data-required="true">
+        <button type="button" class="opt" data-value="Até 30 mil"><span class="opt-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="opt-txt">Até 30 mil</span></button>
+        <button type="button" class="opt" data-value="De 31 mil a 50 mil"><span class="opt-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="opt-txt">De 31 mil a 50 mil</span></button>
+        <button type="button" class="opt" data-value="De 51 mil a 100 mil"><span class="opt-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="opt-txt">De 51 mil a 100 mil</span></button>
+        <button type="button" class="opt" data-value="De 101 mil a 300 mil"><span class="opt-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="opt-txt">De 101 mil a 300 mil</span></button>
+        <button type="button" class="opt" data-value="De 301 mil a 1 milhão"><span class="opt-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="opt-txt">De 301 mil a 1 milhão</span></button>
+        <button type="button" class="opt" data-value="De 1 milhão a 4 milhões"><span class="opt-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="opt-txt">De 1 milhão a 4 milhões</span></button>
+        <button type="button" class="opt" data-value="Mais de 4 milhões"><span class="opt-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="opt-txt">Mais de 4 milhões</span></button>
+      </div>
+    </div>
+
+    <!-- 6: instagram/linkedin -->
+    <div class="step" data-step="5">
+      <span class="q-eyebrow">Para conhecermos melhor sua empresa</span>
+      <h1 class="q-title">Qual o Instagram ou LinkedIn da empresa?</h1>
+      <div class="field-wrap">
+        <div class="contact-field">
+          <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          <input type="text" class="q-input" id="f-social" data-field="social" data-required="true" placeholder="@suaempresa ou URL do LinkedIn">
+        </div>
+        <div class="field-err" id="err-social"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Preencha o Instagram ou LinkedIn</div>
+      </div>
+      <button type="button" class="next-btn" onclick="avancar()">Avançar →</button>
+      <div class="next-hint">aperte Enter</div>
+    </div>
+
+    <!-- 7: funcionarios -->
+    <div class="step" data-step="6">
+      <span class="q-eyebrow">Diagnóstico de receita</span>
+      <h1 class="q-title">Quantas pessoas trabalham na sua empresa hoje?</h1>
+      <div class="opt-list" data-field="funcionarios" data-required="true">
+        <button type="button" class="opt" data-value="Só eu (solopreneur)"><span class="opt-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="opt-txt">Só eu (solopreneur)</span></button>
+        <button type="button" class="opt" data-value="2 a 5 pessoas"><span class="opt-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="opt-txt">2 a 5 pessoas</span></button>
+        <button type="button" class="opt" data-value="6 a 15 pessoas"><span class="opt-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="opt-txt">6 a 15 pessoas</span></button>
+        <button type="button" class="opt" data-value="16 a 30 pessoas"><span class="opt-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="opt-txt">16 a 30 pessoas</span></button>
+        <button type="button" class="opt" data-value="31 a 50 pessoas"><span class="opt-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="opt-txt">31 a 50 pessoas</span></button>
+        <button type="button" class="opt" data-value="Mais de 50 pessoas"><span class="opt-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="opt-txt">Mais de 50 pessoas</span></button>
+      </div>
+    </div>
+
+    <!-- 8: segmento (dropdown pesquisavel) -->
+    <div class="step" data-step="7">
+      <span class="q-eyebrow">Diagnóstico de receita</span>
+      <h1 class="q-title">Em qual segmento sua empresa atua?</h1>
+      <div class="field-wrap seg-select" id="segSelect" data-field="segmento" data-required="true">
+        <div class="seg-trigger" id="segTrigger" tabindex="0">
+          <span id="segLabel">Selecione o segmento</span>
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="seg-panel" id="segPanel">
+          <input type="text" class="seg-search" id="segSearch" placeholder="Buscar segmento…">
+          <div id="segOptions"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9: urgencia -->
+    <div class="step" data-step="8">
+      <span class="q-eyebrow">Diagnóstico de receita</span>
+      <h1 class="q-title">Para quando você precisa estruturar a receita da empresa?</h1>
+      <div class="opt-list" data-field="urgencia" data-required="true">
+        <button type="button" class="opt" data-value="É urgente, preciso começar AGORA"><span class="opt-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="opt-txt">É urgente, preciso começar AGORA</span></button>
+        <button type="button" class="opt" data-value="Próximos 30 dias"><span class="opt-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="opt-txt">Próximos 30 dias</span></button>
+        <button type="button" class="opt" data-value="Em até 3 meses"><span class="opt-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="opt-txt">Em até 3 meses</span></button>
+        <button type="button" class="opt" data-value="Ainda estou pesquisando"><span class="opt-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="opt-txt">Ainda estou pesquisando</span></button>
+      </div>
+    </div>
+
+    <!-- 10: socios -->
+    <div class="step" data-step="9">
+      <span class="q-eyebrow">Diagnóstico de receita</span>
+      <h1 class="q-title">Você tem sócio(s) na empresa?</h1>
+      <div class="opt-list" data-field="socios" data-required="true">
+        <button type="button" class="opt" data-value="Sim"><span class="opt-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="opt-txt">Sim</span></button>
+        <button type="button" class="opt" data-value="Não"><span class="opt-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="opt-txt">Não</span></button>
+      </div>
+    </div>
+
+    <!-- 11: confirmar contato -->
+    <div class="step" data-step="10">
+      <span class="q-eyebrow">Quase lá</span>
+      <h1 class="q-title">Perfeito. Agora vamos agendar sua Reunião Estratégica.</h1>
+      <p class="q-sub">Confirme seus dados de contato:</p>
+      <div class="field-wrap">
+        <div class="contact-field">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <input type="text" class="q-input" id="f-nomeConfirma" data-field="nomeConfirma" data-required="true" placeholder="Seu nome">
+        </div>
+      </div>
+      <div class="field-wrap">
+        <div class="contact-field">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z" fill="none" stroke="none"/><path d="M22 6l-10 7L2 6"/><path d="M2 6h20v12H2z"/></svg>
+          <input type="email" class="q-input" id="f-email" data-field="email" data-required="true" placeholder="Digite seu e-mail profissional" autocomplete="email">
+        </div>
+        <div class="field-err" id="err-email"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Digite um e-mail válido</div>
+      </div>
+      <div class="field-wrap">
+        <div class="contact-field">
+          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <input type="tel" class="q-input" id="f-whatsappConfirma" data-field="whatsappConfirma" placeholder="(00) 00000-0000" inputmode="numeric">
+        </div>
+      </div>
+      <button type="button" class="next-btn" id="submitBtn" onclick="enviar()">Prosseguir →</button>
+      <p class="foot-note">Ao confirmar, você concorda em receber contato da <b>Nettu's</b> por WhatsApp e e-mail sobre sua Reunião Estratégica.</p>
+    </div>
+
+    <!-- 12: sucesso -->
+    <div class="step" data-step="11">
+      <div class="success-wrap">
+        <div class="success-ico"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <h1>Pré-inscrição confirmada com sucesso!</h1>
+        <p>Um especialista da Nettu's entrará em contato em até 24 horas para agendar sua Reunião Estratégica.</p>
+
+        <div class="urgent-box">
+          <div class="u-lbl">⚡ Não quer esperar?</div>
+          <a href="#" id="wppUrgente" target="_blank" class="wpp-btn"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2m0 1.67c2.24 0 4.35.87 5.93 2.46a8.23 8.23 0 0 1 2.42 5.85c0 4.56-3.71 8.27-8.28 8.27a8.3 8.3 0 0 1-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.26 8.26 0 0 1-1.26-4.4c0-4.57 3.72-8.32 8.18-8.32M8.53 7.4c-.16 0-.43.06-.66.31c-.22.25-.87.85-.87 2.07c0 1.22.89 2.4 1.01 2.56c.13.17 1.75 2.67 4.31 3.74c2.13.89 2.56.71 3.03.67c.46-.04 1.5-.61 1.71-1.2c.21-.59.21-1.09.15-1.2c-.07-.11-.24-.17-.5-.3c-.27-.13-1.58-.78-1.82-.87c-.25-.09-.43-.13-.6.14c-.19.26-.7.87-.86 1.05c-.16.19-.32.21-.58.07c-.27-.13-1.13-.42-2.15-1.33c-.79-.71-1.33-1.58-1.48-1.85c-.16-.26-.02-.4.11-.53c.12-.12.27-.32.4-.48c.14-.16.18-.27.28-.45c.09-.19.05-.35-.02-.49c-.07-.13-.6-1.49-.85-2.03c-.22-.5-.44-.48-.6-.48z"/></svg><span id="wppUrgenteLabel">QUERO SER ATENDIDO AGORA</span></a>
+          <div class="wpp-note">aperte o botão caso precise pular a fila</div>
+        </div>
+
+        <div class="deliv-box">
+          <h3>📈 O que você vai receber na reunião</h3>
+          <div class="deliv-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Coeficiente de Alavanca</strong> aplicado ao seu funil (onde atacar primeiro)</span></div>
+          <div class="deliv-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Diagnóstico dos 7 Estágios</strong> (mapa completo da sua jornada de receita)</span></div>
+          <div class="deliv-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Arquitetura Modular Recomendada</strong> (quais blocos priorizar primeiro)</span></div>
+          <div class="deliv-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Plano de Ação 12 Semanas</strong> (roadmap de estruturação previsível)</span></div>
+          <div class="deliv-value">
+            <div class="deliv-old">Valor total desta consultoria: R$ 8.000</div>
+            <div class="deliv-new">Seu investimento hoje: R$ 0</div>
+          </div>
+        </div>
+
+        <div class="dl-card">
+          <h3>⬇ Enquanto aguarda a confirmação…</h3>
+          <p>Preparamos um material exclusivo para você começar a entender onde sua receita está travada:</p>
+          <a href="checklist-nettus.html" target="_blank" class="dl-btn">BAIXAR CHECKLIST: 7 SINAIS DE QUE SUA EMPRESA ESTÁ PERDENDO DINHEIRO</a>
+        </div>
+
+        <div class="next-steps">
+          <h3>🕐 O que acontece agora</h3>
+          <div class="ns-item"><div class="ns-num">1</div><p>Nosso time analisa seu perfil</p></div>
+          <div class="ns-item"><div class="ns-num">2</div><p>Se você se qualificar, recebe WhatsApp confirmando vaga</p></div>
+          <div class="ns-item"><div class="ns-num">3</div><p>Agendamos sua Reunião Estratégica</p></div>
+          <div class="ns-item"><div class="ns-num">4</div><p>Você recebe os 4 entregáveis na própria reunião</p></div>
+        </div>
+
+        <div class="urgent-box">
+          <div class="u-lbl">⚡ Precisa de atendimento urgente?</div>
+          <p style="font-size:13px;color:var(--txt-dim);margin-bottom:14px;">Se sua situação é crítica e você não pode esperar 24h:</p>
+          <a href="#" id="wppUrgente2" target="_blank" class="wpp-btn"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2m0 1.67c2.24 0 4.35.87 5.93 2.46a8.23 8.23 0 0 1 2.42 5.85c0 4.56-3.71 8.27-8.28 8.27a8.3 8.3 0 0 1-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.26 8.26 0 0 1-1.26-4.4c0-4.57 3.72-8.32 8.18-8.32M8.53 7.4c-.16 0-.43.06-.66.31c-.22.25-.87.85-.87 2.07c0 1.22.89 2.4 1.01 2.56c.13.17 1.75 2.67 4.31 3.74c2.13.89 2.56.71 3.03.67c.46-.04 1.5-.61 1.71-1.2c.21-.59.21-1.09.15-1.2c-.07-.11-.24-.17-.5-.3c-.27-.13-1.58-.78-1.82-.87c-.25-.09-.43-.13-.6.14c-.19.26-.7.87-.86 1.05c-.16.19-.32.21-.58.07c-.27-.13-1.13-.42-2.15-1.33c-.79-.71-1.33-1.58-1.48-1.85c-.16-.26-.02-.4.11-.53c.12-.12.27-.32.4-.48c.14-.16.18-.27.28-.45c.09-.19.05-.35-.02-.49c-.07-.13-.6-1.49-.85-2.03c-.22-.5-.44-.48-.6-.48z"/></svg>QUERO SER ATENDIDO AGORA</a>
+          <div class="wpp-note">aperte o botão caso precise pular a fila</div>
+        </div>
+
+        <p class="foot-note">📞 Fique atento ao WhatsApp e e-mail!<br><b>Equipe Nettu's</b></p>
+      </div>
+    </div>
+
+  </form>
+</main>
+
+<script>
+(function(){
+  'use strict';
+
+  var TOTAL_STEPS = 12; // 0..10 perguntas, 11 = sucesso
+  var STEPS_WITH_PROGRESS = 11; // sucesso não conta pra barra
+  var current = 0;
+  var history = [0];
+  var answers = {};
+
+  var WHATSAPP_NUM = '5534984276448'; // 34 98427-6448, formato internacional pro wa.me
+
+  var segmentos = ['Serviços B2B','Serviços B2C','E-commerce','Indústria','Saúde e Bem-estar',
+    'Educação e Treinamentos','SaaS / Tecnologia','Varejo','Construção Civil','Imobiliário',
+    'Advocacia e Contabilidade','Alimentação e Bebidas','Beleza e Estética','Agronegócio',
+    'Financeiro e Seguros','Marketing e Publicidade','Logística e Transporte','Outro'];
+
+  var steps = Array.prototype.slice.call(document.querySelectorAll('.step'));
+  var progressFill = document.getElementById('progressFill');
+  var backBtn = document.getElementById('backBtn');
+
+  function showStep(idx, dir){
+    var cur = document.querySelector('.step.active');
+    var next = steps[idx];
+    if(cur === next) return;
+    if(cur){
+      cur.classList.add('leaving');
+      setTimeout(function(){ cur.classList.remove('active','leaving'); }, 260);
+    }
+    setTimeout(function(){
+      next.classList.add('active');
+      var firstInput = next.querySelector('.q-input');
+      if(firstInput && window.innerWidth > 640) setTimeout(function(){ firstInput.focus(); }, 260);
+    }, cur ? 40 : 0);
+    current = idx;
+    var pct = idx >= STEPS_WITH_PROGRESS ? 100 : Math.round((idx / STEPS_WITH_PROGRESS) * 100);
+    progressFill.style.width = pct + '%';
+    backBtn.classList.toggle('show', idx > 0 && idx < STEPS_WITH_PROGRESS);
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function voltar(){
+    if(history.length < 2) return;
+    history.pop();
+    showStep(history[history.length-1]);
+  }
+  window.voltar = voltar;
+
+  function irPara(idx){
+    history.push(idx);
+    showStep(idx);
+  }
+
+  // ── máscara de telefone ──────────────────────────────────
+  function maskPhone(v){
+    v = v.replace(/\D/g,'').slice(0,11);
+    if(v.length > 10) return v.replace(/(\d{2})(\d{5})(\d{4})/,'($1) $2-$3');
+    if(v.length > 6) return v.replace(/(\d{2})(\d{4})(\d{0,4})/,'($1) $2-$3');
+    if(v.length > 2) return v.replace(/(\d{2})(\d{0,5})/,'($1) $2');
+    if(v.length > 0) return v.replace(/(\d{0,2})/,'($1');
+    return v;
+  }
+  ['f-whatsapp','f-whatsappConfirma'].forEach(function(id){
+    var el = document.getElementById(id);
+    el.addEventListener('input', function(){ el.value = maskPhone(el.value); clearErr(el); });
+  });
+
+  function clearErr(el){
+    var field = el.dataset.field;
+    var err = document.getElementById('err-' + field);
+    if(err) err.classList.remove('show');
+    el.style.borderColor = '';
+  }
+  document.querySelectorAll('.q-input').forEach(function(el){
+    el.addEventListener('input', function(){ clearErr(el); });
+    el.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ e.preventDefault(); avancar(); } });
+  });
+
+  // ── opções single-select: clicar já avança sozinho ───────
+  document.querySelectorAll('.opt-list').forEach(function(list){
+    var field = list.dataset.field;
+    list.querySelectorAll('.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        list.querySelectorAll('.opt').forEach(function(b){ b.classList.remove('checked'); });
+        btn.classList.add('checked');
+        answers[field] = btn.dataset.value;
+        setTimeout(function(){ avancar(); }, 220);
+      });
+    });
+  });
+
+  // ── dropdown de segmento pesquisável ──────────────────────
+  var segTrigger = document.getElementById('segTrigger');
+  var segPanel = document.getElementById('segPanel');
+  var segLabel = document.getElementById('segLabel');
+  var segSearch = document.getElementById('segSearch');
+  var segOptions = document.getElementById('segOptions');
+  var segSelectEl = document.getElementById('segSelect');
+
+  function renderSegOptions(filtro){
+    var f = (filtro||'').toLowerCase();
+    var lista = segmentos.filter(function(s){ return s.toLowerCase().indexOf(f) > -1; });
+    segOptions.innerHTML = lista.length
+      ? lista.map(function(s){ return '<div class="seg-opt" data-value="'+s+'">'+s+'</div>'; }).join('')
+      : '<div class="seg-empty">Nenhum segmento encontrado</div>';
+    segOptions.querySelectorAll('.seg-opt').forEach(function(el){
+      el.addEventListener('click', function(){
+        var v = el.dataset.value;
+        answers.segmento = v;
+        segLabel.textContent = v;
+        segTrigger.classList.add('filled');
+        closeSeg();
+        setTimeout(function(){ avancar(); }, 200);
+      });
+    });
+  }
+  function openSeg(){
+    segPanel.classList.add('open');
+    segTrigger.classList.add('open');
+    segSearch.value='';
+    renderSegOptions('');
+    setTimeout(function(){ segSearch.focus(); }, 50);
+  }
+  function closeSeg(){
+    segPanel.classList.remove('open');
+    segTrigger.classList.remove('open');
+  }
+  segTrigger.addEventListener('click', function(){
+    segPanel.classList.contains('open') ? closeSeg() : openSeg();
+  });
+  segSearch.addEventListener('input', function(){ renderSegOptions(segSearch.value); });
+  document.addEventListener('click', function(e){
+    if(!segSelectEl.contains(e.target)) closeSeg();
+  });
+
+  // ── validação + avanço ────────────────────────────────────
+  function validarPasso(idx){
+    var step = steps[idx];
+    var required = step.querySelectorAll('[data-required="true"]');
+    for(var i=0;i<required.length;i++){
+      var el = required[i];
+      var field = el.dataset.field;
+      if(el.classList.contains('opt-list')){
+        if(!answers[field]) return field;
+      } else if(el.id === 'segSelect'){
+        if(!answers.segmento) return field;
+      } else if(el.tagName === 'INPUT'){
+        var v = el.value.trim();
+        if(field === 'email'){
+          if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return field;
+        } else if(field === 'nome' || field === 'nomeConfirma' || field === 'social'){
+          if(v.length < 2) return field;
+        } else if(field === 'whatsapp'){
+          if(v.replace(/\D/g,'').length < 10) return field;
+        } else if(!v){
+          return field;
+        }
+        answers[field] = v;
+      }
+    }
+    return null;
+  }
+
+  function avancar(){
+    var falha = validarPasso(current);
+    if(falha){
+      var el = document.getElementById('f-' + falha) || document.querySelector('[data-field="'+falha+'"]');
+      var err = document.getElementById('err-' + falha);
+      if(err) err.classList.add('show');
+      if(el && el.tagName === 'INPUT'){ el.style.borderColor = 'var(--red)'; el.focus(); }
+      return;
+    }
+    // pré-preenche a etapa final com nome e whatsapp já coletados
+    if(current === 9){
+      document.getElementById('f-nomeConfirma').value = answers.nome || '';
+      document.getElementById('f-whatsappConfirma').value = answers.whatsapp || '';
+    }
+    if(current < STEPS_WITH_PROGRESS - 1){
+      irPara(current + 1);
+    }
+  }
+  window.avancar = avancar;
+
+  function montarMensagemWhatsapp(){
+    var linhas = [
+      '*Novo diagnóstico de receita — Nettu\'s*','',
+      '*Nome:* ' + (answers.nomeConfirma || answers.nome || '-'),
+      '*Função:* ' + (answers.funcao || '-'),
+      '*E-mail:* ' + (answers.email || '-'),
+      '*WhatsApp:* ' + (answers.whatsappConfirma || answers.whatsapp || '-'),
+      '*Instagram/LinkedIn:* ' + (answers.social || '-'),
+      '','*Principal gargalo:* ' + (answers.gargalo || '-'),
+      '*Faturamento mensal:* ' + (answers.faturamento || '-'),
+      '*Pessoas na empresa:* ' + (answers.funcionarios || '-'),
+      '*Segmento:* ' + (answers.segmento || '-'),
+      '*Urgência:* ' + (answers.urgencia || '-'),
+      '*Tem sócios:* ' + (answers.socios || '-'),
+      '','Vim pelo diagnóstico do site.'
+    ];
+    return encodeURIComponent(linhas.join('\n'));
+  }
+
+  function enviar(){
+    var falha = validarPasso(current);
+    if(falha){
+      var el = document.getElementById('f-' + falha);
+      var err = document.getElementById('err-' + falha);
+      if(err) err.classList.add('show');
+      if(el){ el.style.borderColor = 'var(--red)'; el.focus(); }
+      return;
+    }
+    var btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Enviando…';
+
+    var msg = montarMensagemWhatsapp();
+    var wppLink = 'https://wa.me/' + WHATSAPP_NUM + '?text=' + msg;
+    document.getElementById('wppUrgente').href = wppLink;
+    document.getElementById('wppUrgente2').href = wppLink;
+
+    try{
+      localStorage.setItem('nettus_diagnostico_' + Date.now(), JSON.stringify(answers));
+    }catch(e){}
+
+    setTimeout(function(){
+      irPara(11);
+    }, 500);
+  }
+  window.enviar = enviar;
+
+  // teclado: Enter em qualquer etapa de opção não faz nada especial (clique já avança)
+  document.getElementById('quizForm').addEventListener('submit', function(e){ e.preventDefault(); });
+
+  showStep(0);
+})();
+</script>
+</body>
+</html>
